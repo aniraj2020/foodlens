@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Prediction & Future Trends</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      padding: 2rem;
+    }
+    #chart-wrapper {
+      max-width: 900px;
+      margin: 3rem auto;
+    }
+    canvas {
+      min-height: 400px;
+    }
+  </style>
+</head>
+<body class="container">
+  <h5 class="center-align">Food Insecurity Prediction (2024–2026)</h5>
+
+  <div class="row">
+    <div class="input-field col s6">
+      <select id="categorySelect">
+        <option value="" disabled selected>Select Demographic Category</option>
+        <option value="gender">Gender</option>
+        <option value="age_group">Age</option>
+        <option value="suburb_group">Suburb</option>
+      </select>
+      <label>Select Category</label>
+    </div>
+
+    <div class="input-field col s6">
+      <select id="groupSelect">
+        <option value="" disabled selected>Select Group</option>
+      </select>
+      <label>Select Group</label>
+    </div>
+  </div>
+
+  <div id="chart-wrapper">
+    <canvas id="predictChart"></canvas>
+  </div>
+
+    <!-- Back Button -->
+  <div class="center-align" style="margin-top: 2rem;">
+    <a href="/" class="btn blue">Back to Home</a>
+  </div>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      M.FormSelect.init(document.querySelectorAll("select"));
+      const categorySelect = document.getElementById("categorySelect");
+      const groupSelect = document.getElementById("groupSelect");
+      const ctx = document.getElementById("predictChart").getContext("2d");
+
+      let chart;
+
+      categorySelect.addEventListener("change", async () => {
+        const category = categorySelect.value;
+        groupSelect.innerHTML = '<option value="" disabled selected>Select Group</option>';
+        const res = await fetch(`/api/trends/values?category=${category}`);
+        const { values } = await res.json();
+
+        values.forEach(val => {
+          const option = document.createElement("option");
+          option.value = val;
+          option.textContent = val;
+          groupSelect.appendChild(option);
+        });
+
+        M.FormSelect.init(groupSelect);
+        clearChart();
+      });
+
+      groupSelect.addEventListener("change", renderChart);
+      categorySelect.addEventListener("change", renderChart);
+
+      function clearChart() {
+        if (chart) {
+          chart.destroy();
+          chart = null;
+        }
+      }
+
+      async function renderChart() {
+        const category = categorySelect.value;
+        const group = groupSelect.value;
+
+        if (!category || !group) {
+          clearChart();
+          M.toast({
+            html: "Please select both a category and a group.",
+            classes: "rounded red lighten-1 white-text",
+            displayLength: 2000
+          });
+          return;
+        }
+
+        try {
+          const res = await fetch(`/api/predict?category=${category}&group=${group}`);
+          const { years, actual, predicted, splitIndex } = await res.json();
+
+          clearChart();
+
+          chart = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: years,
+              datasets: [
+                {
+                  label: "Actual",
+                  data: actual,
+                  borderColor: "#42a5f5",
+                  borderWidth: 2,
+                  pointRadius: 4,
+                  fill: false,
+                  tension: 0.3
+                },
+                {
+                  label: "Predicted",
+                  data: Array(splitIndex).fill(null).concat(predicted),
+                  borderColor: "#ff8a65",
+                  borderDash: [5, 5],
+                  borderWidth: 2,
+                  pointRadius: 4,
+                  fill: false,
+                  tension: 0.3
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: {
+                    boxWidth: 18,
+                    padding: 15,
+                    font: {
+                      size: 13
+                    }
+                  }
+                },
+                tooltip: {
+                  mode: "index",
+                  intersect: false
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        } catch (err) {
+          console.error("Prediction chart error:", err);
+        }
+      }
+    });
+
+  </script>
+</body>
+</html>
