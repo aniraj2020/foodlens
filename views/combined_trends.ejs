@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Combined Demographic Trends</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      padding: 2rem;
+    }
+    canvas {
+      max-width: 100%;
+      margin: 2rem auto;
+    }
+    #checkboxes label {
+      margin-right: 1rem;
+    }
+  </style>
+</head>
+<body class="container center-align">
+  <h5>Combined Demographic Trends Over Time</h5>
+
+  <!-- Demographic Category Selector -->
+  <div class="row">
+    <div class="input-field col s6 offset-s3">
+      <select id="categorySelect">
+        <option value="" disabled selected>Select Demographic Category</option>
+        <option value="gender">Gender</option>
+        <option value="age_group">Age</option>
+        <option value="suburb_group">Suburb</option>
+      </select>
+      <label>Select Demographic Category</label>
+    </div>
+  </div>
+
+  <!-- Dynamic Checkboxes -->
+  <div id="checkboxes" class="center-align"></div>
+  <p id="chartInstruction" class="grey-text text-darken-2" style="margin-top: 1rem;"></p>
+
+  <!-- Chart Canvas -->
+  <div style="display: flex; justify-content: center;">
+    <div style="width: 100%; max-width: 1000px; height: 500px;">
+      <canvas id="trendChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Back Button -->
+  <div class="center-align" style="margin-top: 2rem;">
+    <a href="/" class="btn blue">Back to Home</a>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('select');
+      M.FormSelect.init(elems);
+    });
+  </script>
+  <script src="/script_combined_trends.js"></script>
+</body>
+</html>

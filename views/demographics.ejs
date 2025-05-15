@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Demographic Visualization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      padding: 2rem;
+    }
+    canvas {
+      max-width: 100%;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body class="container">
+
+  <h4 class="center-align">Food Insecurity by Demographic Group</h4>
+
+  <!-- Year Dropdown -->
+  <div class="row">
+    <div class="input-field col s12 m6 offset-m3">
+      <select id="yearSelect">
+        <option value="All" selected>All Years</option>
+        <option value="2023">2023</option>
+        <option value="2022">2022</option>
+        <option value="2021">2021</option>
+        <option value="2020">2020</option>
+        <option value="2019">2019</option>
+      </select>
+      <label>Select Year</label>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="center-align">
+    <canvas id="barChart" height="100"></canvas>
+  </div>
+
+  <!-- Back Button -->
+  <div class="center-align" style="margin-top: 2rem;">
+    <a href="/" class="btn blue">Back to Home</a>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const selects = document.querySelectorAll('select');
+      M.FormSelect.init(selects);
+    });
+  </script>
+  <script src="/script_demographics.js"></script>
+
+</body>
+</html>
