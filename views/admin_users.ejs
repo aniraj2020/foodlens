@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel - FoodLens</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
+  <style>
+    body {
+      padding: 3rem;
+    }
+    .card {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body class="container">
+  <h4>Welcome Admin</h4>
+  <p>You are logged in as: <strong><%= user.username %></strong></p>
+
+  <h5>All Registered Users</h5>
+
+  <% if (users.length > 0) { %>
+    <% users.forEach(u => { %>
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">👤 <%= u.username %></span>
+          <p>Role: <%= u.role %></p>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p>No users found.</p>
+  <% } %>
+
+  <a href="/" class="btn blue">Back to Home</a>
+  <a href="/logout" class="btn red">Logout</a>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
