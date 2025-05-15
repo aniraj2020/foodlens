@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>FoodLens - Home</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding: 2rem;
+        background-color: #f3f4f6;
+      }
+      h4 {
+        margin-bottom: 2rem;
+      }
+      .nav-btns {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        max-width: 300px;
+      }
+    </style>
+  </head>
+
+<body data-welcome="<%= welcomeMessage || '' %>">
+    <h4>Welcome to FoodLens, <%= user.username %>!</h4>
+
+    <div class="nav-btns">
+      <a href="/type" class="btn waves-effect">Food Insecurity Types</a>
+      <a href="/demographics" class="btn green darken-1">Demographics View</a>
+      <a href="/combined" class="btn blue darken-1">Combined Trends</a>
+      <a href="/insight" class="btn deep-purple darken-1">Insight</a>
+      <a href="/predict" class="btn orange darken-1">Predict Future</a>
+
+      <a href="/profile" class="btn grey darken-2">Profile</a>
+
+      <% if (user.role === 'admin') { %>
+        <a href="/admin-panel" class="btn red darken-3">Admin Panel</a>
+      <% } %>
+
+      <a href="/logout" class="btn red">Logout</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="/script_home.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+  </body>
+</html>
