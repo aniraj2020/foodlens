@@ -1,0 +1,38 @@
+<!-- views/profile.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Your Profile - FoodLens</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
+  <style>
+    body {
+      padding-top: 5rem;
+      background-color: #f4f4f4;
+    }
+    .card {
+      padding: 2rem;
+      max-width: 500px;
+      margin: auto;
+    }
+    .btn-space {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body class="container">
+
+  <div class="card white z-depth-2 center-align">
+    <h5>Hello, <%= user.username %>!</h5>
+    <div class="divider"></div>
+    <br/>
+    <p><strong>Role:</strong> <%= user.role %></p>
+
+    <div style="margin-top: 2rem;">
+      <a href="/" class="btn blue">Back to Home</a>
+      <a href="/logout" class="btn red">Logout</a>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
