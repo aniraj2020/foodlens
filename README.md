@@ -106,6 +106,12 @@ db.users.updateOne({ username: "your_username" }, { $set: { role: "admin" } })
 
 ---
 
+###  Backend Architecture Diagram
+
+![FoodLens Backend Architecture](./assets/flowChart.png)
+
+---
+
 ## License & Data Source
 
 This project is built for academic and demonstration purposes.  
