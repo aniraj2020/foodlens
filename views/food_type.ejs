@@ -7,26 +7,43 @@
   <style>
     body {
       padding: 2rem;
+      background-color: #f9f9f9;
     }
-    canvas {
-      max-width: 600px;
-      margin: auto;
-      height: 400px !important;
+
+    h4 {
+      margin-bottom: 2rem;
+    }
+
+    .chart-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    #pieChart {
+      max-width: 500px;
+      max-height: 500px;
+    }
+
+    .center-btn {
+      text-align: center;
     }
   </style>
 </head>
 <body>
-
   <div class="container center-align">
     <h4>Food Insecurity Types Distribution</h4>
-    <canvas id="pieChart"></canvas>
+
+    <div class="chart-container">
+      <canvas id="pieChart"></canvas>
+    </div>
+
+    <div class="center-btn">
+      <a href="/" class="btn blue">Back to Home</a>
+    </div>
   </div>
 
-    <!-- Back Button -->
-  <div class="center-align" style="margin-top: 2rem;">
-    <a href="/" class="btn blue">Back to Home</a>
-  </div>
-  
   <script src="/script_type.js"></script>
 </body>
 </html>

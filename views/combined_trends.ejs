@@ -11,22 +11,49 @@
   <style>
     body {
       padding: 2rem;
+      background-color: #f9f9f9;
     }
-    canvas {
-      max-width: 100%;
-      margin: 2rem auto;
+
+    h5 {
+      margin-bottom: 2rem;
     }
+
+    .input-field select {
+      background-color: white;
+    }
+
     #checkboxes label {
       margin-right: 1rem;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+
+    .chart-container {
+      max-width: 1000px;
+      margin: 2rem auto;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 400px !important;
+    }
+
+    .center-buttons {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    #chartInstruction {
+      margin-top: 1rem;
     }
   </style>
 </head>
 <body class="container center-align">
   <h5>Combined Demographic Trends Over Time</h5>
 
-  <!-- Demographic Category Selector -->
+  <!-- Demographic Category Dropdown -->
   <div class="row">
-    <div class="input-field col s6 offset-s3">
+    <div class="input-field col s12 m6 offset-m3">
       <select id="categorySelect">
         <option value="" disabled selected>Select Demographic Category</option>
         <option value="gender">Gender</option>
@@ -39,27 +66,24 @@
 
   <!-- Dynamic Checkboxes -->
   <div id="checkboxes" class="center-align"></div>
-  <p id="chartInstruction" class="grey-text text-darken-2" style="margin-top: 1rem;"></p>
+  <p id="chartInstruction" class="grey-text text-darken-2"></p>
 
-  <!-- Chart Canvas -->
-  <div style="display: flex; justify-content: center;">
-    <div style="width: 100%; max-width: 1000px; height: 500px;">
-      <canvas id="trendChart"></canvas>
-    </div>
+  <!-- Chart -->
+  <div class="chart-container">
+    <canvas id="trendChart"></canvas>
   </div>
 
-  <!-- Reset and back Button -->
-  <div class="center-align" style="margin-top: 2rem;">
-  <a href="/" class="btn blue">Back to Home</a>
-  <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">Reset</button>
+  <!-- Reset and Back Buttons -->
+  <div class="center-buttons">
+    <a href="/" class="btn blue">Back to Home</a>
+    <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">Reset</button>
   </div>
 
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      var elems = document.querySelectorAll('select');
-      M.FormSelect.init(elems);
+      M.FormSelect.init(document.querySelectorAll('select'));
     });
   </script>
   <script src="/script_combined_trends.js"></script>

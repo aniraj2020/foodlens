@@ -32,4 +32,14 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch(err => {
       console.error("Chart loading error:", err);
     });
+
+    fetch("/api/user/filters", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chart: "type",
+      filters: { viewed: true }
+    })
+});
+
 });
