@@ -108,12 +108,19 @@ document.addEventListener("DOMContentLoaded", function () {
             backgroundColor: "rgba(63, 81, 181, 0.6)"
           }]
         },
-        options: {
+         options: {
           responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: { precision: 0 }
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: "bottom", // below chart
+              labels: {
+                boxWidth: 20,
+                padding: 10,
+                font: { size: 13 },
+                usePointStyle: true
+              }
             }
           }
         }

@@ -7,19 +7,38 @@
   <style>
     body {
       padding: 2rem;
+      background-color: #f9f9f9;
     }
+
+    h5 {
+      margin-bottom: 2rem;
+    }
+
+    .input-field select {
+      background-color: white;
+    }
+
     #chart-wrapper {
       max-width: 900px;
-      margin: 3rem auto;
+      margin: 2rem auto;
     }
+
     canvas {
-      min-height: 400px;
+      width: 100% !important;
+      height: 400px !important;
+    }
+
+    .center-buttons {
+      text-align: center;
+      margin-top: 2rem;
     }
   </style>
 </head>
-<body class="container">
-  <h5 class="center-align">Food Insecurity Prediction (2024–2026)</h5>
+<body class="container center-align">
 
+  <h5>Food Insecurity Prediction (2024–2026)</h5>
+
+  <!-- Dropdowns -->
   <div class="row">
     <div class="input-field col s6">
       <select id="categorySelect">
@@ -39,14 +58,15 @@
     </div>
   </div>
 
+  <!-- Chart -->
   <div id="chart-wrapper">
     <canvas id="predictChart"></canvas>
   </div>
 
-  <!-- Reset and back Button -->
-  <div class="center-align" style="margin-top: 2rem;">
-  <a href="/" class="btn blue">Back to Home</a>
-  <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">Reset</button>
+  <!-- Buttons -->
+  <div class="center-buttons">
+    <a href="/" class="btn blue">Back to Home</a>
+    <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">Reset</button>
   </div>
 
   <!-- Scripts -->

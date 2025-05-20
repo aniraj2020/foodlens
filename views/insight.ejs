@@ -7,10 +7,33 @@
   <style>
     body {
       padding: 2rem;
+      background-color: #f9f9f9;
     }
-    .row {
+
+    h5 {
       margin-bottom: 2rem;
     }
+
+    .input-field select {
+      background-color: white;
+    }
+
+    .chart-container {
+      width: 100%;
+      max-width: 1000px;
+      margin: 2rem auto;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 400px !important;
+    }
+
+    .center-buttons {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
     #alertBox {
       display: none;
       padding: 1rem;
@@ -20,15 +43,13 @@
       font-weight: bold;
       margin-top: 1rem;
     }
-    canvas {
-      max-width: 1000px;
-      margin: 2rem auto;
-    }
   </style>
 </head>
 <body class="container center-align">
+
   <h5>Food Insecurity Detailed Insight</h5>
 
+  <!-- Dropdowns -->
   <div class="row">
     <div class="input-field col s6">
       <select id="categorySelect">
@@ -50,21 +71,22 @@
 
   <div id="alertBox"></div>
 
-  <div style="height: 1000px; width: 100%; display: flex; justify-content: center;">
-    <canvas id="insightChart" style="max-width: 900px;"></canvas>
-  </div>  
+  <!-- Chart -->
+  <div class="chart-container">
+    <canvas id="insightChart"></canvas>
+  </div>
 
-  <!-- Back Button -->
-  <div class="center-align" style="margin-top: 2rem;">
+  <!-- Buttons -->
+  <div class="center-buttons">
     <a href="/" class="btn blue">Back to Home</a>
+    <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">Reset</button>
   </div>
 
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      var elems = document.querySelectorAll('select');
-      M.FormSelect.init(elems);
+      M.FormSelect.init(document.querySelectorAll('select'));
     });
   </script>
   <script src="/script_insight.js"></script>
