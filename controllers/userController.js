@@ -23,7 +23,7 @@ async function saveChartFilters(req, res) {
     console.log("Before:", user.lastFilters);
     user.lastFilters[chart] = filters;
     user.markModified('lastFilters');
-    user.lastActivity = new Date();
+    user.lastActivity = { chart, timestamp: new Date() };
 
     await user.save();
     console.log("Saved filters for:", user.username);

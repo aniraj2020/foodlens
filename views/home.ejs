@@ -42,23 +42,33 @@
   <body data-welcome="<%= welcomeMessage || '' %>">
     <h4>Welcome to FoodLens, <%= user.username %>!</h4>
 
-  <% if (user.lastFilters?.predict?.category && user.lastFilters.predict.group && user.lastActivity) { %>
-    <!-- <p><%= JSON.stringify(user.lastFilters) %></p>
-    <p><%= user.lastActivity %></p> -->
-
-    <div class="activity-card z-depth-1">
-      <strong>Last Activity:</strong><br />
-      You last viewed <em>Predict</em> with
-      <strong><%= user.lastFilters.predict.category %></strong> →
-      "<%= user.lastFilters.predict.group %>"
-      on <%= new Date(user.lastActivity).toLocaleString() %>.
-    </div>
-  <% } else { %>
-    <div class="activity-card z-depth-1">
-      No recent activity yet. Explore the dashboard to get started!
-    </div>
-  <% } %>
-
+    <% if (user.lastActivity && user.lastFilters?.[user.lastActivity.chart]) {
+      const chartLabels = {
+        predict: "Predict",
+        demographics: "Demographics View",
+        combined: "Combined Trends",
+        insight: "Insight",
+        type: "Food Insecurity Types"
+      };
+      const chart = user.lastActivity.chart;
+      const filter = user.lastFilters[chart];
+    %>
+      <div class="activity-card z-depth-1">
+        <strong>Last Activity:</strong><br />
+        You last viewed <em><%= chartLabels[chart] || chart %></em>
+        <% if (filter.category) { %>
+          with <strong><%= filter.category %> year</strong>
+        <% } %>
+        <% if (filter.group) { %>
+          → "<%= filter.group %>"
+        <% } %>
+        on <%= new Date(user.lastActivity.timestamp).toLocaleString() %>.
+      </div>
+    <% } else { %>
+      <div class="activity-card z-depth-1">
+        No recent activity yet. Explore the dashboard to get started!
+      </div>
+    <% } %>
 
     <div class="nav-btns">
       <a href="/type" class="btn waves-effect">Food Insecurity Types</a>
@@ -66,7 +76,6 @@
       <a href="/combined" class="btn blue darken-1">Combined Trends</a>
       <a href="/insight" class="btn deep-purple darken-1">Insight</a>
       <a href="/predict" class="btn orange darken-1">Predict Future</a>
-
       <a href="/profile" class="btn grey darken-2">Profile</a>
 
       <% if (user.role === 'admin') { %>

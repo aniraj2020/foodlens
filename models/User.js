@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema({
     default: {}
   },
   lastActivity: {
-    type: Date,
-    default: null
+  chart: { type: String },
+  timestamp: { type: Date }
   }
 });
 
