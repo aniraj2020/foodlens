@@ -6,8 +6,11 @@ const session = require("express-session");
 const passport = require("passport");
 const http = require("http");
 const socketio = require("socket.io");
+const User = require("./models/User");
+
 
 // Route imports
+const homeRoutes = require("./routes/home");
 const foodTypeRoutes = require('./routes/type');
 const demographicsRoutes = require('./routes/demographics');
 const trendsRoutes = require('./routes/trends'); 
@@ -15,6 +18,7 @@ const insightRoutes = require('./routes/insight');
 const predictRoutes = require('./routes/predict');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require("./routes/admin");
+const userRoutes = require("./routes/user");
 
 const { ensureAuthenticated, ensureAdmin } = require("./middleware/auth");
 
@@ -38,7 +42,10 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(session({
   secret: "foodlens_secret",
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    sameSite: "lax"
+  }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -47,11 +54,13 @@ app.use(passport.session());
 app.set("view engine", "ejs");
 
 // API Routes
+app.use("/", homeRoutes);
 app.use("/api/type", foodTypeRoutes);
 app.use("/api/demographics", demographicsRoutes);
 app.use("/api/trends", trendsRoutes);
 app.use("/api/insight", insightRoutes);
 app.use("/api/predict", predictRoutes);
+app.use("/api/user", userRoutes);
 
 // Auth Routes (login, register, logout)
 app.use("/", authRoutes);
@@ -60,11 +69,27 @@ app.use("/", authRoutes);
 app.use("/", adminRoutes);
 
 // View Routes (protected)
-app.get("/", ensureAuthenticated, (req, res) => {
-  const toast = req.session.toastMessage || null;
-  delete req.session.toastMessage;
-  res.render("home", { user: req.user, welcomeMessage: toast });
+app.get("/", ensureAuthenticated, async (req, res) => {
+  try {
+    const toast = req.session.toastMessage || null;
+    delete req.session.toastMessage;
+
+    const userFromDB = await User.findById(req.user._id).lean();
+
+    res.render("home", {
+      user: {
+        ...req.user,  // keeps session fields like `username`, `role`
+        lastFilters: userFromDB.lastFilters,
+        lastActivity: userFromDB.lastActivity
+      },
+      welcomeMessage: toast
+    });
+  } catch (err) {
+    console.error("Error loading home page user data:", err);
+    res.redirect("/logout");
+  }
 });
+
 
 app.get("/type", ensureAuthenticated, (req, res) => {
   res.render("food_type", { user: req.user });

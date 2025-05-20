@@ -26,11 +26,39 @@
         width: 100%;
         max-width: 300px;
       }
+      .activity-card {
+        margin-bottom: 2rem;
+        padding: 1rem;
+        border-radius: 8px;
+        background-color: #e3f2fd;
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+        font-size: 15px;
+      }
     </style>
   </head>
 
-<body data-welcome="<%= welcomeMessage || '' %>">
+  <body data-welcome="<%= welcomeMessage || '' %>">
     <h4>Welcome to FoodLens, <%= user.username %>!</h4>
+
+  <% if (user.lastFilters?.predict?.category && user.lastFilters.predict.group && user.lastActivity) { %>
+    <!-- <p><%= JSON.stringify(user.lastFilters) %></p>
+    <p><%= user.lastActivity %></p> -->
+
+    <div class="activity-card z-depth-1">
+      <strong>Last Activity:</strong><br />
+      You last viewed <em>Predict</em> with
+      <strong><%= user.lastFilters.predict.category %></strong> →
+      "<%= user.lastFilters.predict.group %>"
+      on <%= new Date(user.lastActivity).toLocaleString() %>.
+    </div>
+  <% } else { %>
+    <div class="activity-card z-depth-1">
+      No recent activity yet. Explore the dashboard to get started!
+    </div>
+  <% } %>
+
 
     <div class="nav-btns">
       <a href="/type" class="btn waves-effect">Food Insecurity Types</a>
@@ -50,8 +78,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="/script_home.js"></script>
-
     <script src="/socket.io/socket.io.js"></script>
-
   </body>
 </html>
