@@ -57,10 +57,13 @@
         <strong>Last Activity:</strong><br />
         You last viewed <em><%= chartLabels[chart] || chart %></em>
         <% if (filter.category) { %>
-          with <strong><%= filter.category %> year</strong>
+          with <strong><%= filter.category %> </strong>
         <% } %>
         <% if (filter.group) { %>
           → "<%= filter.group %>"
+        <% } %>
+        <% if (filter.values && filter.values.length) { %>
+          → [<%= filter.values.join(", ") %>]
         <% } %>
         on <%= new Date(user.lastActivity.timestamp).toLocaleString() %>.
       </div>
