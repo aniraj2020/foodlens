@@ -105,6 +105,11 @@ db.users.updateOne({ username: "your_username" }, { $set: { role: "admin" } })
 ```
 
 ---
+###  Backend Architecture Diagram
+
+![FoodLens Backend Architecture](./assets/flowChart.png)
+
+---
 
 ###  Backend Architecture Diagram
 

@@ -16,6 +16,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ["user", "admin"],
     default: "user"
+  },
+  lastFilters: {
+    type: Object,
+    default: {}
+  },
+  lastActivity: {
+    type: Date,
+    default: null
   }
 });
 
