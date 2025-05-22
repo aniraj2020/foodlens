@@ -24,8 +24,12 @@ const userSchema = new mongoose.Schema({
   lastActivity: {
   chart: { type: String },
   timestamp: { type: Date }
+  },
+},
+  { 
+    timestamps: true 
   }
-});
+);
 
 // Hash password before saving
 userSchema.pre("save", async function (next) {
