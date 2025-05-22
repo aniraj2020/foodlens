@@ -3,17 +3,7 @@
 <head>
   <title>Admin Panel - User Activity</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
-  <style>
-    .user-card {
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      background-color: #f0f4f8;
-      border-radius: 8px;
-    }
-    .activity-info {
-      margin-top: 0.5rem;
-    }
-  </style>
+  <link rel="stylesheet" href="/style.css" />
 </head>
 
 <body class="container">
@@ -64,7 +54,7 @@
       <% } %>
 
       <% if (u.username !== 'adminuser') { %>
-        <div class="right-align" style="margin-top: 1rem;">
+       <div class="admin-controls">
           <form action="/admin/clear-user-history" method="POST" style="display:inline;">
             <input type="hidden" name="userId" value="<%= u._id %>" />
             <input type="hidden" name="search" value="<%= search || '' %>">
@@ -107,7 +97,7 @@
       </li>
     <% } %>
   </ul>
-<% } %>
+  <% } %>
 
   <!-- Delete Confirmation Modal -->
   <div id="confirmModal" class="modal">
