@@ -42,47 +42,51 @@
   <body data-welcome="<%= welcomeMessage || '' %>">
     <h4>Welcome to FoodLens, <%= user.username %>!</h4>
 
-    <% if (user.lastActivity && user.lastFilters?.[user.lastActivity.chart]) {
-      const chartLabels = {
-        predict: "Predict",
-        demographics: "Demographics View",
-        combined: "Combined Trends",
-        insight: "Insight",
-        type: "Food Insecurity Types"
-      };
-      const chart = user.lastActivity.chart;
-      const filter = user.lastFilters[chart];
-    %>
-      <div class="activity-card z-depth-1">
-        <strong>Last Activity:</strong><br />
-        You last viewed <em><%= chartLabels[chart] || chart %></em>
-        <% if (filter.category) { %>
-          with <strong><%= filter.category %> </strong>
-        <% } %>
-        <% if (filter.group) { %>
-          → "<%= filter.group %>"
-        <% } %>
-        <% if (filter.values && filter.values.length) { %>
-          → [<%= filter.values.join(", ") %>]
-        <% } %>
-        on <%= new Date(user.lastActivity.timestamp).toLocaleString() %>.
-      </div>
-    <% } else { %>
-      <div class="activity-card z-depth-1">
-        No recent activity yet. Explore the dashboard to get started!
-      </div>
-    <% } %>
+    <div id="activitySection">
+      <% if (user.lastActivity && user.lastFilters?.[user.lastActivity.chart]) {
+        const chartLabels = {
+          predict: "Predict",
+          demographics: "Demographics View",
+          combined: "Combined Trends",
+          insight: "Insight",
+          type: "Food Insecurity Types"
+        };
+        const chart = user.lastActivity.chart;
+        const filter = user.lastFilters[chart];
+      %>
+        <div class="activity-card z-depth-1">
+          <strong>Last Activity:</strong><br />
+          You last viewed <em><%= chartLabels[chart] || chart %></em>
+          <% if (filter.category) { %>
+            with <strong><%= filter.category %> </strong>
+          <% } %>
+          <% if (filter.group) { %>
+            → "<%= filter.group %>"
+          <% } %>
+          <% if (filter.values && filter.values.length) { %>
+            → [<%= filter.values.join(", ") %>]
+          <% } %>
+          on <%= new Date(user.lastActivity.timestamp).toLocaleString() %>.
+          <br />
+          <button id="clearHistoryBtn" class="btn amber darken-3" style="margin-top: 1rem;">Clear History</button>
+        </div>
+      <% } else { %>
+        <div class="activity-card z-depth-1">
+          No recent activity yet. Explore the dashboard to get started!
+        </div>
+      <% } %>
+    </div>
 
     <div class="nav-btns">
-      <a href="/type" class="btn waves-effect">Food Insecurity Types</a>
-      <a href="/demographics" class="btn green darken-1">Demographics View</a>
-      <a href="/combined" class="btn blue darken-1">Combined Trends</a>
-      <a href="/insight" class="btn deep-purple darken-1">Insight</a>
-      <a href="/predict" class="btn orange darken-1">Predict Future</a>
-      <a href="/profile" class="btn grey darken-2">Profile</a>
+      <a href="/type" class="btn teal darken-2">Food Insecurity Types</a>
+      <a href="/demographics" class="btn green darken-2">Demographics View</a>
+      <a href="/combined" class="btn blue darken-2">Combined Trends</a>
+      <a href="/insight" class="btn deep-purple darken-2">Insight</a>
+      <a href="/predict" class="btn orange darken-3">Predict Future</a>
+      <a href="/profile" class="btn grey darken-3">Profile</a>
 
       <% if (user.role === 'admin') { %>
-        <a href="/admin-panel" class="btn red darken-3">Admin Panel</a>
+        <a href="/admin-panel" class="btn indigo darken-3">Admin Panel</a>
       <% } %>
 
       <a href="/logout" class="btn red">Logout</a>
@@ -91,5 +95,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="/script_home.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const clearBtn = document.getElementById("clearHistoryBtn");
+        if (clearBtn) {
+          clearBtn.addEventListener("click", async () => {
+            try {
+              const res = await fetch("/api/user/clear-history", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+              });
+              const data = await res.json();
+              if (res.ok) {
+                M.toast({ html: data.message, classes: "green lighten-1 white-text" });
+                document.getElementById("activitySection").innerHTML = `
+                  <div class="activity-card z-depth-1">
+                    No recent activity yet. Explore the dashboard to get started!
+                  </div>
+                `;
+              }
+            } catch (err) {
+              console.error("Clear history failed:", err);
+              M.toast({ html: "Error clearing history", classes: "red lighten-1 white-text" });
+            }
+          });
+        }
+      });
+    </script>
   </body>
 </html>
