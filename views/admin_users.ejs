@@ -1,38 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Admin Panel - FoodLens</title>
+  <title>Admin Panel - User Activity</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
   <style>
-    body {
-      padding: 3rem;
+    .user-card {
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      background-color: #f0f4f8;
+      border-radius: 8px;
     }
-    .card {
-      margin-bottom: 1rem;
+    .activity-info {
+      margin-top: 0.5rem;
     }
   </style>
 </head>
 <body class="container">
-  <h4>Welcome Admin</h4>
-  <p>You are logged in as: <strong><%= user.username %></strong></p>
+  <h4 class="center-align">Admin Panel – User Activity</h4>
 
-  <h5>All Registered Users</h5>
+  <% users.forEach(u => { %>
+  <div class="user-card z-depth-1">
+    <strong><%= u.username %></strong> — <%= u.role %>
 
-  <% if (users.length > 0) { %>
-    <% users.forEach(u => { %>
-      <div class="card">
-        <div class="card-content">
-          <span class="card-title">👤 <%= u.username %></span>
-          <p>Role: <%= u.role %></p>
-        </div>
+    <% if (u.lastActivity && u.lastFilters?.[u.lastActivity.chart]) {
+        const filter = u.lastFilters[u.lastActivity.chart];
+    %>
+      <div class="activity-info">
+        Last viewed <em><%= u.lastActivity.chart %></em>
+        <% if (filter.category) { %>
+          with <strong><%= filter.category %></strong>
+        <% } %>
+        <% if (filter.group) { %>
+          → "<%= filter.group %>"
+        <% } %>
+        <% if (filter.values) { %>
+          → [<%= filter.values.join(", ") %>]
+        <% } %>
+        on <%= new Date(u.lastActivity.timestamp).toLocaleString() %>.
       </div>
-    <% }) %>
-  <% } else { %>
-    <p>No users found.</p>
-  <% } %>
+    <% } else { %>
+      <div class="activity-info grey-text">No activity recorded.</div>
+    <% } %>
+      <% if (u.username !== 'adminuser') { %>
+      <div class="right-align" style="margin-top: 1rem;">
+        <form action="/admin/clear-user-history" method="POST" style="display:inline;">
+          <input type="hidden" name="userId" value="<%= u._id %>" />
+          <button class="btn-small orange" type="submit">Clear History</button>
+        </form>
 
-  <a href="/" class="btn blue">Back to Home</a>
-  <a href="/logout" class="btn red">Logout</a>
+        <form action="/admin/toggle-role" method="POST" style="display:inline;">
+          <input type="hidden" name="userId" value="<%= u._id %>" />
+          <button class="btn-small blue" type="submit">
+            <%= u.role === 'admin' ? 'Demote' : 'Promote' %>
+          </button>
+        </form>
+
+        <form action="/admin/delete-user" method="POST" style="display:inline;">
+          <input type="hidden" name="userId" value="<%= u._id %>" />
+          <button class="btn-small red" type="submit" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+        </form>
+      </div>
+    <% } %>
+  </div>
+<% }); %>
+
+
+  <div class="center-align" style="margin-top: 2rem;">
+    <a href="/" class="btn blue">Back to Home</a>
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
