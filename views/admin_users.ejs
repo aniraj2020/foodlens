@@ -18,6 +18,10 @@
 <body class="container">
   <h4 class="center-align">Admin Panel – User Activity</h4>
 
+  <div class="center-align" style="margin: 1rem 0;">
+    <a href="/admin/export-csv" class="btn green">Export CSV</a>
+  </div>
+
   <% users.forEach(u => { %>
   <div class="user-card z-depth-1">
     <strong><%= u.username %></strong> — <%= u.role %>

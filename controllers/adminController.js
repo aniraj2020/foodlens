@@ -1,5 +1,5 @@
-// controllers/adminController.js
 const User = require("../models/User");
+createCsvWriter = require("csv-writer").createObjectCsvStringifier;
 
 // Show all users to admin
 const showAllUsers = async (req, res) => {
@@ -77,9 +77,53 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// CSV export route
+const exportUserCSV = async (req, res) => {
+  try {
+    //for timestamping in extported files
+    const now = new Date();
+    const stamptime = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()}_${String(now.getHours()).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+
+    const users = await User.find({}, "username role lastActivity lastFilters createdAt").lean(); 
+
+    const csvWriter = createCsvWriter({
+      header: [
+        { id: "username", title: "Username" },
+        { id: "role", title: "Role" },
+        { id: "chart", title: "Last Chart" },
+        { id: "filters", title: "Filters" },
+        { id: "timestamp", title: "Last Active At" },
+        { id: "createdAt", title: "Created At" }
+      ]
+    });
+
+    const records = users.map(u => ({
+      username: u.username,
+      role: u.role,
+      chart: u.lastActivity?.chart || "",
+      filters: JSON.stringify(u.lastFilters?.[u.lastActivity?.chart] || {}),
+      timestamp: u.lastActivity?.timestamp
+        ? new Date(u.lastActivity.timestamp).toLocaleString()
+        : "",
+      createdAt: u.createdAt
+        ? new Date(u.createdAt).toLocaleString()
+        : ""
+    }));
+
+    const csvContent = csvWriter.getHeaderString() + csvWriter.stringifyRecords(records);
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", `attachment; filename=user_activity_logs_${stamptime}.csv`);
+    res.send(csvContent);
+  } catch (err) {
+    console.error("Error exporting CSV:", err);
+    res.status(500).send("Failed to generate CSV");
+  }
+};
+
 module.exports = {
   showAllUsers,
   clearUserHistory,
   toggleUserRole,
-  deleteUser
+  deleteUser,
+  exportUserCSV
 };
