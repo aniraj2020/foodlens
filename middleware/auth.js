@@ -9,7 +9,7 @@ function ensureAuthenticated(req, res, next) {
   // Check if user is an admin
   function ensureAdmin(req, res, next) {
     if (req.isAuthenticated() && req.user.role === "admin") return next();
-    res.status(403).send("Access denied. Admins only.");
+    return res.status(403).render("access_denied");
   }
   
   module.exports = {
