@@ -20,10 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
           }]
         },
         options: {
-          responsive: true,
           plugins: {
             legend: {
-              position: "bottom"
+              position: 'bottom',
+              labels: {
+                font: {
+                  size: 16 
+                },
+                padding: 12
+              }
             }
           }
         }

@@ -4,36 +4,9 @@
   <title>Prediction & Future Trends</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      padding: 2rem;
-      background-color: #f9f9f9;
-    }
-
-    h5 {
-      margin-bottom: 2rem;
-    }
-
-    .input-field select {
-      background-color: white;
-    }
-
-    #chart-wrapper {
-      max-width: 900px;
-      margin: 2rem auto;
-    }
-
-    canvas {
-      width: 100% !important;
-      height: 400px !important;
-    }
-
-    .center-buttons {
-      text-align: center;
-      margin-top: 2rem;
-    }
-  </style>
+  <link rel="stylesheet" href="/style.css" />
 </head>
+
 <body class="container center-align">
 
   <h5>Food Insecurity Prediction (2024–2026)</h5>
@@ -59,7 +32,7 @@
   </div>
 
   <!-- Chart -->
-  <div id="chart-wrapper">
+  <div class="chart-container">
     <canvas id="predictChart"></canvas>
   </div>
 

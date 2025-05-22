@@ -1,33 +1,37 @@
-<!-- views/profile.ejs -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Your Profile - FoodLens</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
-  <style>
-    body {
-      padding-top: 5rem;
-      background-color: #f4f4f4;
-    }
-    .card {
-      padding: 2rem;
-      max-width: 500px;
-      margin: auto;
-    }
-    .btn-space {
-      margin-right: 10px;
-    }
-  </style>
+  <link rel="stylesheet" href="/style.css" />
 </head>
-<body class="container">
 
-  <div class="card white z-depth-2 center-align">
-    <h5>Hello, <%= user.username %>!</h5>
-    <div class="divider"></div>
-    <br/>
-    <p><strong>Role:</strong> <%= user.role %></p>
+<body class="home-body">
 
-    <div style="margin-top: 2rem;">
+  <!-- App Bar -->
+  <div class="app-bar">
+    <div class="app-bar-left">
+      <i class="material-icons left">code</i>
+      <a href="https://github.com/aniraj2020/FoodLens" target="_blank">GitHub Repo</a>
+    </div>
+    <div class="app-bar-center">
+      Welcome to FoodLens, <%= user.username %>!
+    </div>
+    <div class="app-bar-right">
+      <a href="/logout" class="btn red">Logout</a>
+    </div>
+  </div>
+
+  <!-- Profile Card -->
+  <div class="info-section" style="max-width: 600px; margin: 0 auto;">
+    <h4><i class="material-icons left">account_circle</i> Profile Details</h4>
+    <p class="profile-label"><strong>Username:</strong> <%= user.username %></p>
+    <p class="profile-label"><strong>Role:</strong> <%= user.role %></p>
+
+
+    <div class="center-align" style="margin-top: 2rem;">
       <a href="/" class="btn blue">Back to Home</a>
       <a href="/logout" class="btn red">Logout</a>
     </div>

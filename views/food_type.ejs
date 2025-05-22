@@ -3,45 +3,18 @@
 <head>
   <title>FoodLens Dashboard</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      padding: 2rem;
-      background-color: #f9f9f9;
-    }
-
-    h4 {
-      margin-bottom: 2rem;
-    }
-
-    .chart-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-
-    #pieChart {
-      max-width: 500px;
-      max-height: 500px;
-    }
-
-    .center-btn {
-      text-align: center;
-    }
-  </style>
 </head>
-<body>
-  <div class="container center-align">
-    <h4>Food Insecurity Types Distribution</h4>
+<body class="container center-align">
+  <h4>Food Insecurity Types Distribution</h4>
 
-    <div class="chart-container">
-      <canvas id="pieChart"></canvas>
-    </div>
+  <div class="chart-container">
+    <canvas id="pieChart"></canvas>
+  </div>
 
-    <div class="center-btn">
-      <a href="/" class="btn blue">Back to Home</a>
-    </div>
+  <div class="center-btn">
+    <a href="/" class="btn blue">Back to Home</a>
   </div>
 
   <script src="/script_type.js"></script>

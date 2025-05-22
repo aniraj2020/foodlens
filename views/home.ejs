@@ -1,126 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>FoodLens - Home</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/style.css" />
-    <style>
-      body {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        padding: 2rem;
-        background-color: #f3f4f6;
-      }
-      h4 {
-        margin-bottom: 2rem;
-      }
-      .nav-btns {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        width: 100%;
-        max-width: 300px;
-      }
-      .activity-card {
-        margin-bottom: 2rem;
-        padding: 1rem;
-        border-radius: 8px;
-        background-color: #e3f2fd;
-        width: 100%;
-        max-width: 400px;
-        text-align: center;
-        font-size: 15px;
-      }
-    </style>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <title>FoodLens - Home</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
 
-  <body data-welcome="<%= welcomeMessage || '' %>">
-    <h4>Welcome to FoodLens, <%= user.username %>!</h4>
+<body class="home-body" data-welcome="<%= welcomeMessage || '' %>">
 
-    <div id="activitySection">
+  <% const chartLabels = {
+    predict: "Predict",
+    demographics: "Demographics View",
+    combined: "Combined Trends",
+    insight: "Insight",
+    type: "Food Insecurity Types"
+  }; %>
+
+  <!-- App Bar -->
+  <div class="app-bar">
+    <div class="app-bar-left">
+      <i class="material-icons left">code</i>
+      <a href="https://github.com/aniraj2020/FoodLens" target="_blank">GitHub Repo</a>
+    </div>
+    <div class="app-bar-center">
+      Welcome to FoodLens, <%= user.username %>!
+    </div>
+    <div class="app-bar-right">
+      <a href="/logout" class="btn red">Logout</a>
+    </div>
+  </div>
+
+  <!-- Main Two-Column Section -->
+  <div class="home-main">
+    <!-- Left Block: Info + Activity + Buttons -->
+    <div class="left-main">
+      <div class="left-hero">
+        <h5>Empowering Melbourne</h5>
+        <p>
+          Discover insights, trends, and stories around food insecurity. 
+          Understand challenges, explore data, and take part in building a food-secure city.
+        </p>
+      </div>
+
       <% if (user.lastActivity && user.lastFilters?.[user.lastActivity.chart]) {
-        const chartLabels = {
-          predict: "Predict",
-          demographics: "Demographics View",
-          combined: "Combined Trends",
-          insight: "Insight",
-          type: "Food Insecurity Types"
-        };
         const chart = user.lastActivity.chart;
         const filter = user.lastFilters[chart];
       %>
         <div class="activity-card z-depth-1">
+          <i class="material-icons" style="font-size: 28px; color: #1565c0;">history</i><br />
           <strong>Last Activity:</strong><br />
           You last viewed <em><%= chartLabels[chart] || chart %></em>
-          <% if (filter.category) { %>
-            with <strong><%= filter.category %> </strong>
-          <% } %>
-          <% if (filter.group) { %>
-            → "<%= filter.group %>"
-          <% } %>
-          <% if (filter.values && filter.values.length) { %>
-            → [<%= filter.values.join(", ") %>]
-          <% } %>
+          <% if (filter.category) { %> with <strong><%= filter.category %></strong> <% } %>
+          <% if (filter.group) { %> → "<%= filter.group %>" <% } %>
+          <% if (filter.values?.length) { %> → [<%= filter.values.join(", ") %>] <% } %>
+          <br />
           on <%= new Date(user.lastActivity.timestamp).toLocaleString() %>.
           <br />
-          <button id="clearHistoryBtn" class="btn amber darken-3" style="margin-top: 1rem;">Clear History</button>
+          <button id="clearHistoryBtn" class="btn amber darken-3 clear-btn">Clear History</button>
         </div>
       <% } else { %>
         <div class="activity-card z-depth-1">
+          <i class="material-icons" style="font-size: 28px; color: #1565c0;">history</i><br>
           No recent activity yet. Explore the dashboard to get started!
         </div>
       <% } %>
+
+      <!-- Dashboard Buttons -->
+      <div class="dashboard-grid">
+        <a href="/type" class="btn teal darken-2"><i class="material-icons left">pie_chart</i>Food Insecurity Types</a>
+        <a href="/demographics" class="btn green darken-2"><i class="material-icons left">bar_chart</i>Demographics View</a>
+        <a href="/combined" class="btn blue darken-2"><i class="material-icons left">equalizer</i>Combined Trends</a>
+        <a href="/insight" class="btn purple darken-2"><i class="material-icons left">insights</i>Insight</a>
+        <a href="/predict" class="btn orange darken-3"><i class="material-icons left">show_chart</i>Predict Future</a>
+        <a href="/profile" class="btn grey darken-3"><i class="material-icons left">account_circle</i>Profile</a>
+
+        <% if (user.role === 'admin') { %>
+          <a href="/admin-panel" class="btn indigo darken-3"><i class="material-icons left">admin_panel_settings</i>Admin Panel</a>
+        <% } %>
+
+        <a href="/logout" class="btn red"><i class="material-icons left">exit_to_app</i>Logout</a>
+      </div>
     </div>
 
-    <div class="nav-btns">
-      <a href="/type" class="btn teal darken-2">Food Insecurity Types</a>
-      <a href="/demographics" class="btn green darken-2">Demographics View</a>
-      <a href="/combined" class="btn blue darken-2">Combined Trends</a>
-      <a href="/insight" class="btn deep-purple darken-2">Insight</a>
-      <a href="/predict" class="btn orange darken-3">Predict Future</a>
-      <a href="/profile" class="btn grey darken-3">Profile</a>
+    <!-- Right Block: Info Content -->
+    <div class="right-info">
+      <div class="info-section">
+        <h4>What is Food Insecurity?</h4>
+        <p>
+          Food insecurity means not having consistent access to enough food for an active, healthy life. It can result from
+          financial hardship, limited availability, or social barriers.
+        </p>
+        <h5>Core Dimensions:</h5>
+        <ul>
+          <li><strong>✔ Availability:</strong> Enough supply of food</li>
+          <li><strong>✔ Access:</strong> Financial and physical access</li>
+          <li><strong>✔ Utilization:</strong> Proper intake and nutrition</li>
+          <li><strong>✔ Stability:</strong> Reliable access over time</li>
+        </ul>
 
-      <% if (user.role === 'admin') { %>
-        <a href="/admin-panel" class="btn indigo darken-3">Admin Panel</a>
-      <% } %>
-
-      <a href="/logout" class="btn red">Logout</a>
+        <h5>Why It Matters:</h5>
+        <ul>
+          <li><strong>Health:</strong> Improves wellbeing</li>
+          <li><strong>Education:</strong> Boosts school attendance and performance</li>
+          <li><strong>Economic Impact:</strong> Reduces healthcare costs and increases productivity</li>
+          <li><strong>Social Stability:</strong> Supports inclusion and reduces unrest</li>
+        </ul>
+      </div>
     </div>
+  </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="/script_home.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const clearBtn = document.getElementById("clearHistoryBtn");
-        if (clearBtn) {
-          clearBtn.addEventListener("click", async () => {
-            try {
-              const res = await fetch("/api/user/clear-history", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" }
-              });
-              const data = await res.json();
-              if (res.ok) {
-                M.toast({ html: data.message, classes: "green lighten-1 white-text" });
-                document.getElementById("activitySection").innerHTML = `
-                  <div class="activity-card z-depth-1">
-                    No recent activity yet. Explore the dashboard to get started!
-                  </div>
-                `;
-              }
-            } catch (err) {
-              console.error("Clear history failed:", err);
-              M.toast({ html: "Error clearing history", classes: "red lighten-1 white-text" });
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="/script_home.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const clearBtn = document.getElementById("clearHistoryBtn");
+      if (clearBtn) {
+        clearBtn.addEventListener("click", async () => {
+          try {
+            const res = await fetch("/api/user/clear-history", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" }
+            });
+            const data = await res.json();
+            if (res.ok) {
+              M.toast({ html: data.message, classes: "green lighten-1 white-text" });
+              document.querySelector(".activity-card").innerHTML = `
+                <i class="material-icons" style="font-size: 28px; color: #1565c0;">history</i><br />
+                No recent activity yet. Explore the dashboard to get started!
+              `;
             }
-          });
-        }
-      });
-    </script>
-  </body>
+          } catch (err) {
+            console.error("Clear history failed:", err);
+            M.toast({ html: "Error clearing history", classes: "red lighten-1 white-text" });
+          }
+        });
+      }
+    });
+  </script>
+</body>
 </html>
