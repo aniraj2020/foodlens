@@ -41,35 +41,32 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   document.getElementById("resetButton").addEventListener("click", async () => {
-  // Reset dropdown to default (assumes "All" is default)
-  yearSelect.value = "All";
+  // Reset to "All"
+  const resetYear = "All";
+  yearSelect.value = resetYear;
   M.FormSelect.init(yearSelect);
 
-  // Destroy chart if visible
   if (chart) {
     chart.destroy();
     chart = null;
   }
 
-  // Clear saved filters from backend
+  // Clear filters and set default
   try {
     await fetch("/api/user/filters", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chart: "demographics",
-        filters: {category: year}
+        filters: { category: resetYear }
       })
     });
   } catch (err) {
     console.error("Failed to reset filters:", err);
   }
 
-  // Scroll to top
   window.scrollTo(0, 0);
-
-  // Re-render chart for "All Years"
-  fetchDataAndRender();
+  fetchDataAndRender(); // Rerender with "All"
 });
 
   async function fetchDataAndRender() {

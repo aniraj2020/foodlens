@@ -15,7 +15,7 @@ const getDemographicsData = async (req, res) => {
       {
         $group: {
           _id: "$demographic_group",
-          total: { $sum: "$count" }
+          total: { $sum: "$affected" }
         }
       },
       { $sort: { total: -1 } }

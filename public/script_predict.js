@@ -70,8 +70,10 @@ document.addEventListener("DOMContentLoaded", function () {
       groupSelect.innerHTML = '<option value="" disabled selected>Select Group</option>';
       values.forEach(val => {
         const option = document.createElement("option");
-        option.value = val;
-        option.textContent = val;
+        
+        const normalizedVal = val.trim().replace(/\s+/g, " ").replace(/(\d{2})\s*\+\s*years/, "$1+ years");
+        option.value = normalizedVal;
+        option.textContent = normalizedVal;
 
         if (isInitialLoad && preselect === val) {
           option.selected = true;
@@ -117,7 +119,8 @@ function validateSelections() {
     if (!validateSelections()) return;
 
     const category = categorySelect.value;
-    const group = groupSelect.value;
+
+    const group = groupSelect.value?.trim().replace(/\s+/g, " ").replace(/(\d{2})\s*\+\s*years/, "$1+ years");
 
     document.body.style.cursor = "wait";
 
@@ -135,7 +138,7 @@ function validateSelections() {
     }
 
     try {
-      const res = await fetch(`/api/predict?category=${category}&group=${group}`);
+      const res = await fetch(`/api/predict?category=${category}&group=${encodeURIComponent(group)}`);
       const { years, actual, predicted, splitIndex } = await res.json();
 
       if (chart) chart.destroy();
@@ -185,6 +188,10 @@ function validateSelections() {
           },
           scales: {
             y: {
+              title: {
+                display: true,
+                text: "Estimated Affected Individuals"
+              },
               beginAtZero: true
             }
           }

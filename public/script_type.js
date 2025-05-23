@@ -1,12 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Script loaded!");
 
-  fetch("/api/type") 
+  fetch("/api/type")
     .then(res => res.json())
     .then(data => {
       console.log("Data fetched:", data.labels, data.values);
 
       const ctx = document.getElementById("pieChart").getContext("2d");
+
       new Chart(ctx, {
         type: "pie",
         data: {
@@ -20,16 +21,26 @@ document.addEventListener("DOMContentLoaded", () => {
           }]
         },
         options: {
+          responsive: true,
           plugins: {
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const label = context.label || "";
+                  const value = context.raw;
+                  return `${label}: ${value} cases`;
+                }
+              }
+            },
             legend: {
               position: 'bottom',
               labels: {
                 font: {
-                  size: 16 
+                  size: 16
                 },
                 padding: 12
               }
-            }
+            },
           }
         }
       });
@@ -38,13 +49,13 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Chart loading error:", err);
     });
 
-    fetch("/api/user/filters", {
+  // Save user view for analytics
+  fetch("/api/user/filters", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       chart: "type",
       filters: { viewed: true }
     })
-});
-
+  });
 });

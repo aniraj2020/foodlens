@@ -30,26 +30,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Handle category change
   categorySelect.addEventListener("change", async () => {
-    const category = categorySelect.value;
-    groupSelect.innerHTML = '<option value="" disabled selected>Select Group</option>';
+  const category = categorySelect.value;
+  groupSelect.innerHTML = '<option value="" disabled selected>Select Group</option>';
 
-    const res = await fetch(`/api/trends/values?category=${category}`);
-    const { values } = await res.json();
+  const res = await fetch(`/api/trends/values?category=${category}`);
+  const { values } = await res.json();
 
-    values.forEach(val => {
-      const option = document.createElement("option");
-      option.value = val;
-      option.textContent = val;
-      groupSelect.appendChild(option);
-    });
-
-    const inst = M.FormSelect.getInstance(groupSelect);
-    if (inst) inst.destroy();
-    M.FormSelect.init(groupSelect);
-
-    clearChart();
-    if (!isInitialLoad) renderChartIfReady();
+  values.forEach(val => {
+    const normalizedVal = val.trim().replace(/\s+/g, " ").replace(/(\d{2})\s*\+\s*years/, "$1+ years");
+    const option = document.createElement("option");
+    option.value = normalizedVal;
+    option.textContent = normalizedVal;
+    // Remove the faulty line here
+    groupSelect.appendChild(option);
   });
+
+  const inst = M.FormSelect.getInstance(groupSelect);
+  if (inst) inst.destroy();
+  M.FormSelect.init(groupSelect);
+
+  clearChart();
+  if (!isInitialLoad) renderChartIfReady();
+});
 
   // Render on group change
   groupSelect.addEventListener("change", renderChartIfReady);
@@ -76,10 +78,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
       groupSelect.innerHTML = '<option value="" disabled>Select Group</option>';
       values.forEach(val => {
+        const normalizedVal = val.trim().replace(/\s+/g, " ").replace(/(\d{2})\s*\+\s*years/, "$1+ years");
         const option = document.createElement("option");
-        option.value = val;
-        option.textContent = val;
-        if (val === filters.group) option.selected = true;
+        option.value = normalizedVal;
+        option.textContent = normalizedVal;
+        if (normalizedVal === filters.group) option.selected = true;
         groupSelect.appendChild(option);
       });
 
@@ -94,7 +97,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function renderChartIfReady() {
     const category = categorySelect.value;
-    const group = groupSelect.value;
+    
+    let group = groupSelect.value;
+    group = group.trim().replace(/\s+/g, " ").replace(/(\d{2})\s*\+\s*years/, "$1+ years");
 
     if (!category || !group) {
       clearChart();
@@ -107,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     try {
-      const res = await fetch(`/api/insight?category=${category}&group=${group}`);
+      const res = await fetch(`/api/insight?category=${category}&group=${encodeURIComponent(group)}`);
       const data = await res.json();
 
       if (!data?.years || !data?.datasets?.length) {
@@ -159,6 +164,10 @@ document.addEventListener("DOMContentLoaded", function () {
           },
           scales: {
             y: {
+              title: {
+              display: true,
+              text: "Estimated Affected Individuals"
+            },
               beginAtZero: true,
               ticks: { stepSize: 200 }
             }

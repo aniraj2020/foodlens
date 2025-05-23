@@ -28,11 +28,15 @@ const getPredictionData = async (req, res) => {
       {
         $group: {
           _id: "$year",
-          total: { $sum: "$count" }
+          total: { $sum: "$affected" }
         }
       },
       { $sort: { _id: 1 } }
     ]);
+
+    if (!results.length) {
+      return res.status(404).json({ message: `No data found for group "${group}"` });
+    }
 
     const actualYears = results.map(r => r._id);
     const actualValues = results.map(r => r.total);
@@ -41,10 +45,12 @@ const getPredictionData = async (req, res) => {
     const predict = linearRegression(points);
 
     const predictedYears = [2024, 2025, 2026];
-    const predictedValues = predictedYears.map(year => Math.round(predict(year)));
+
+    //rounding to nearest person as model predicts how many individuals are expected to be food insecure
+    const predictedValues = predictedYears.map(year => Math.round(predict(year)));  
 
     const allYears = [...actualYears, ...predictedYears];
-    const allValues = [...actualValues, ...predictedValues];
+    //const allValues = [...actualValues, ...predictedValues];
 
     res.json({
       years: allYears,
