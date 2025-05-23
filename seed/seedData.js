@@ -18,7 +18,7 @@ const connectDB = async () => {
   }
 };
 
-// Helper to categorize
+// Helper to categorize groups
 function categorizeGroup(group) {
   const genderValues = ["Male", "Female"];
   const agePattern = /^\d{2}-\d{2} years$|^\d{2}\+ years$/;
@@ -38,35 +38,46 @@ const seedData = async () => {
     .pipe(csv())
     .on("data", (data) => {
       const year = parseInt(data.year);
-      const count = parseInt(data.sample_size);
-      const group = data.respondent_group;
+      const sampleSize = parseInt(data.sample_size);
+      const resultPercent = parseFloat(data.result);
+      
+      let group = data.respondent_group?.trim();
+      // Fix common encoding or accidental whitespace issues
+      group = group.replace(/\s+/g, " "); // Collapse multiple spaces
+      group = group.replace(/(\d{2})\s*\+\s*years/, "$1+ years"); // Normalize "65 + years" → "65+ years"
 
-      if (!isNaN(year) && !isNaN(count) && data.insecurity_type && group) {
+      const type = data.insecurity_type?.trim();
+
+      // Calculate affected count
+      if (!isNaN(year) && !isNaN(sampleSize) && !isNaN(resultPercent) && type && group) {
+        const affected = Math.round((sampleSize * resultPercent) / 100);
+
         const categoryObj = categorizeGroup(group);
-
         const doc = {
           year,
-          insecurity_type: data.insecurity_type,
-          count,
-          demographic_group: group
+          sample_size: sampleSize,
+          result: resultPercent,
+          affected,
+          insecurity_type: type,
+          demographic_group: group,
         };
-        
-        // Only add the detected category key (avoid storing null)
+
+        // Add demographic key (gender, age_group, suburb_group)
         if (categoryObj.gender) doc.gender = categoryObj.gender;
         if (categoryObj.age_group) doc.age_group = categoryObj.age_group;
         if (categoryObj.suburb_group) doc.suburb_group = categoryObj.suburb_group;
-        
+
         results.push(doc);
       }
     })
     .on("end", async () => {
       console.log("Parsed records:", results.length);
-      console.log("Example record:", results[0]); // 
+      console.log("Sample record:", results[0]);
 
       try {
         await FoodSecurity.deleteMany({});
         await FoodSecurity.insertMany(results);
-        console.log("Seeded successfully!");
+        console.log("Seeding completed successfully!");
         mongoose.connection.close();
       } catch (err) {
         console.error("Seeding error:", err.message);

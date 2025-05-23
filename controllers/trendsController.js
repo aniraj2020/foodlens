@@ -32,7 +32,7 @@ const getDistinctValues = async (req, res) => {
   try {
     let values = await FoodSecurity.distinct(category);
     values = values.filter(v => v !== null && v !== "null" && v !== undefined);
-    console.log(`📦 Distinct values for "${category}" →`, values.length);
+    console.log(`Distinct values for "${category}" →`, values.length);
     res.json({ values: values.sort() });
   } catch (err) {
     console.error("Error fetching distinct values:", err.message);
@@ -71,7 +71,7 @@ const getTrendData = async (req, res) => {
             year: "$year",
             value: `$${category}`
           },
-          total: { $sum: "$count" }
+          total: { $sum: "$affected" }
         }
       },
       {
