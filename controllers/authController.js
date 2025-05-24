@@ -23,7 +23,7 @@ const registerUser = async (req, res) => {
     const newUser = new User({ username, password });
     await newUser.save();
 
-    // ✅ Simple welcome toast message (will show after login)
+    // ✅ Welcome message after registration (optional)
     req.session.toastMessage = `👋 Welcome ${newUser.username}`;
     res.redirect("/login");
   } catch (err) {
@@ -46,9 +46,9 @@ const loginUser = (req, res, next) => {
     req.logIn(user, (err) => {
       if (err) return next(err);
 
-      //toast for all users on successful login
+      // ✅ Show a toast on successful login
       req.session.toastMessage = `Welcome ${user.username}`;
-      return res.redirect("/");
+      return res.redirect("/dashboard"); // ✅ FIX: redirect to dashboard
     });
   })(req, res, next);
 };
@@ -56,7 +56,7 @@ const loginUser = (req, res, next) => {
 // Logout
 const logoutUser = (req, res) => {
   req.logout(() => {
-    res.redirect("/login");
+    res.redirect("/");
   });
 };
 
