@@ -23,8 +23,8 @@ const registerUser = async (req, res) => {
     const newUser = new User({ username, password });
     await newUser.save();
 
-    // Set welcome toast message for new user
-    req.session.toastMessage = `Welcome to FoodLens, ${newUser.username}!`;
+    // ✅ Simple welcome toast message (will show after login)
+    req.session.toastMessage = `👋 Welcome ${newUser.username}`;
     res.redirect("/login");
   } catch (err) {
     console.error("Registration error:", err.message);
@@ -45,20 +45,13 @@ const loginUser = (req, res, next) => {
 
     req.logIn(user, (err) => {
       if (err) return next(err);
-      
-      // Set welcome type in session
-      if (!req.session.hasLoggedInBefore) {
-        req.session.toastMessage = `Welcome to FoodLens, ${user.username}!`;
-        req.session.hasLoggedInBefore = true;
-      } else {
-          req.session.toastMessage = `Welcome back, ${user.username}!`;
-        }
 
+      //toast for all users on successful login
+      req.session.toastMessage = `Welcome ${user.username}`;
       return res.redirect("/");
     });
   })(req, res, next);
 };
-
 
 // Logout
 const logoutUser = (req, res) => {
