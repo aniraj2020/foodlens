@@ -7,16 +7,17 @@ const passport = require("passport");
 const http = require("http");
 const socketio = require("socket.io");
 const sharedSession = require("express-socket.io-session");
+const expressLayouts = require("express-ejs-layouts");
 const User = require("./models/User");
 
 // Route imports
 const homeRoutes = require("./routes/home");
-const foodTypeRoutes = require('./routes/type');
-const demographicsRoutes = require('./routes/demographics');
-const trendsRoutes = require('./routes/trends'); 
-const insightRoutes = require('./routes/insight');
-const predictRoutes = require('./routes/predict');
-const authRoutes = require('./routes/auth');
+const foodTypeRoutes = require("./routes/type");
+const demographicsRoutes = require("./routes/demographics");
+const trendsRoutes = require("./routes/trends");
+const insightRoutes = require("./routes/insight");
+const predictRoutes = require("./routes/predict");
+const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const userRoutes = require("./routes/user");
 const { ensureAuthenticated } = require("./middleware/auth");
@@ -26,22 +27,20 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-// Connect DB
+// Connect to MongoDB
 connectDB();
 
-// Shared session middleware
+// Session Middleware
 const sessionMiddleware = session({
   secret: "foodlens_secret",
   resave: false,
   saveUninitialized: false,
   cookie: { sameSite: "lax" }
 });
-
-// Apply session to both Express and Socket.IO
 app.use(sessionMiddleware);
 io.use(sharedSession(sessionMiddleware, { autoSave: true }));
 
-// Other middleware
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -49,13 +48,81 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// View engine
+// EJS + Layouts
 app.set("view engine", "ejs");
-
-// Store io for use in routes (if needed)
+app.use(expressLayouts);
+app.set("layout", "layout");
 app.set("io", io);
 
-// API Routes
+//
+// ===== PUBLIC ROUTES =====
+//
+
+app.get("/", (req, res) => {
+  res.render("landing", { title: "Welcome to FoodLens" });
+});
+
+app.get("/about", (req, res) => {
+  res.render("about", { title: "About Us" });
+});
+
+app.get("/contact", (req, res) => {
+  res.render("contact", { title: "Contact Us" });
+});
+
+app.get("/login", (req, res) => {
+  res.render("login", { title: "Login" }); 
+});
+
+//
+// ===== AUTHENTICATED ROUTES =====
+//
+
+app.get("/dashboard", ensureAuthenticated, async (req, res) => {
+  try {
+    const toast = req.session.toastMessage || null;
+    delete req.session.toastMessage;
+
+    const userFromDB = await User.findById(req.user._id).lean();
+
+    res.render("home", {
+      title: "Dashboard",
+      user: {
+        ...req.user,
+        lastFilters: userFromDB.lastFilters,
+        lastActivity: userFromDB.lastActivity
+      },
+      welcomeMessage: toast
+    });
+  } catch (err) {
+    console.error("Error loading dashboard:", err);
+    res.redirect("/logout");
+  }
+});
+
+app.get("/type", ensureAuthenticated, (req, res) =>
+  res.render("food_type", { title: "Food Insecurity Types", user: req.user })
+);
+app.get("/demographics", ensureAuthenticated, (req, res) =>
+  res.render("demographics", { title: "Demographics", user: req.user })
+);
+app.get("/combined", ensureAuthenticated, (req, res) =>
+  res.render("combined_trends", { title: "Combined Trends", user: req.user })
+);
+app.get("/insight", ensureAuthenticated, (req, res) =>
+  res.render("insight", { title: "Insights", user: req.user })
+);
+app.get("/predict", ensureAuthenticated, (req, res) =>
+  res.render("predict", { title: "Predict Future", user: req.user })
+);
+app.get("/profile", ensureAuthenticated, (req, res) =>
+  res.render("profile", { title: "Profile", user: req.user })
+);
+
+//
+// ===== API + AUTH ROUTES =====
+//
+
 app.use("/", homeRoutes);
 app.use("/api/type", foodTypeRoutes);
 app.use("/api/demographics", demographicsRoutes);
@@ -66,36 +133,10 @@ app.use("/api/user", userRoutes);
 app.use("/", authRoutes);
 app.use("/", adminRoutes);
 
-// View Routes
-app.get("/", ensureAuthenticated, async (req, res) => {
-  try {
-    const toast = req.session.toastMessage || null;
-    delete req.session.toastMessage;
+//
+// ===== SOCKET.IO CONNECTION =====
+//
 
-    const userFromDB = await User.findById(req.user._id).lean();
-
-    res.render("home", {
-      user: {
-        ...req.user,
-        lastFilters: userFromDB.lastFilters,
-        lastActivity: userFromDB.lastActivity
-      },
-      welcomeMessage: toast
-    });
-  } catch (err) {
-    console.error("Error loading home page user data:", err);
-    res.redirect("/logout");
-  }
-});
-
-app.get("/type", ensureAuthenticated, (req, res) => res.render("food_type", { user: req.user }));
-app.get("/demographics", ensureAuthenticated, (req, res) => res.render("demographics", { user: req.user }));
-app.get("/combined", ensureAuthenticated, (req, res) => res.render("combined_trends", { user: req.user }));
-app.get("/insight", ensureAuthenticated, (req, res) => res.render("insight", { user: req.user }));
-app.get("/predict", ensureAuthenticated, (req, res) => res.render("predict", { user: req.user }));
-app.get("/profile", ensureAuthenticated, (req, res) => res.render("profile", { user: req.user }));
-
-// Socket.IO: Track unique active users
 const activeUsers = new Set();
 
 io.on("connection", (socket) => {
@@ -108,15 +149,13 @@ io.on("connection", (socket) => {
     io.emit("activeUserCount", activeUsers.size);
   }
 
-    // Add this for toast messages to work
   socket.on("toast", (msg) => {
-    // console.log("Toast received from client:", msg);
-    socket.emit("toast", msg); // echo back to client
+    socket.emit("toast", msg);
   });
 
   socket.on("disconnect", () => {
     const stillConnected = Array.from(io.sockets.sockets.values()).some(
-      s => s.userId === socket.userId
+      (s) => s.userId === socket.userId
     );
 
     if (!stillConnected && socket.userId) {
@@ -126,7 +165,7 @@ io.on("connection", (socket) => {
   });
 });
 
-// Start server
+// Start Server
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () =>
   console.log(`Server running with Socket.IO on http://localhost:${PORT}`)
