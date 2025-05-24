@@ -34,7 +34,7 @@
 
   <!-- Main Two-Column Section -->
   <div class="home-main">
-    <!-- Left Block: Info + Activity + Buttons -->
+    <!-- Left Block -->
     <div class="left-main">
       <div class="left-hero">
         <h5>Empowering Melbourne</h5>
@@ -75,16 +75,14 @@
         <a href="/insight" class="btn purple darken-2"><i class="material-icons left">insights</i>Insight</a>
         <a href="/predict" class="btn orange darken-3"><i class="material-icons left">show_chart</i>Predict Future</a>
         <a href="/profile" class="btn grey darken-3"><i class="material-icons left">account_circle</i>Profile</a>
-
         <% if (user.role === 'admin') { %>
           <a href="/admin-panel" class="btn indigo darken-3"><i class="material-icons left">admin_panel_settings</i>Admin Panel</a>
         <% } %>
-
         <a href="/logout" class="btn red"><i class="material-icons left">exit_to_app</i>Logout</a>
       </div>
     </div>
 
-    <!-- Right Block: Info Content -->
+    <!-- Right Block -->
     <div class="right-info">
       <div class="info-section">
         <h4>What is Food Insecurity?</h4>
@@ -99,7 +97,6 @@
           <li><strong>✔ Utilization:</strong> Proper intake and nutrition</li>
           <li><strong>✔ Stability:</strong> Reliable access over time</li>
         </ul>
-
         <h5>Why It Matters:</h5>
         <ul>
           <li><strong>Health:</strong> Improves wellbeing</li>
@@ -111,10 +108,12 @@
     </div>
   </div>
 
+  <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script src="/script_home.js"></script>
   <script src="/socket.io/socket.io.js"></script>
+  <script src="/script_home.js"></script>
 
+  <!-- Clear History Script -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const clearBtn = document.getElementById("clearHistoryBtn");

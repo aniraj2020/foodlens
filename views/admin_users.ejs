@@ -9,6 +9,11 @@
 <body class="container">
   <h4 class="center-align">Admin Panel – User Activity</h4>
 
+  <!-- Active Users -->
+  <div class="center-align" style="margin-top: 1rem;">
+    <h6>Active Users: <span id="activeCount">-</span></h6>
+  </div>
+
   <!-- CSV Export -->
   <form method="GET" action="/admin/export-csv" class="center-align" style="margin: 1rem 0;">
     <input type="hidden" name="search" value="<%= search || '' %>">
@@ -120,7 +125,8 @@
   <div class="center-align" style="margin-top: 2rem;">
     <a href="/" class="btn blue">Back to Home</a>
   </div>
-
+  
+  <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -141,6 +147,15 @@
         M.toast({ html: toastMessage, displayLength: 4000 });
       }
     });
+
+    
+    const socket = io();
+
+    socket.on("activeUserCount", function (count) {
+      const el = document.getElementById("activeCount");
+      if (el) el.innerText = count;
+    });
+
   </script>
 </body>
 </html>

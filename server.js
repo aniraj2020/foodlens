@@ -6,8 +6,8 @@ const session = require("express-session");
 const passport = require("passport");
 const http = require("http");
 const socketio = require("socket.io");
+const sharedSession = require("express-socket.io-session");
 const User = require("./models/User");
-
 
 // Route imports
 const homeRoutes = require("./routes/home");
@@ -19,39 +19,41 @@ const predictRoutes = require('./routes/predict');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require("./routes/admin");
 const userRoutes = require("./routes/user");
-
-const { ensureAuthenticated, ensureAdmin } = require("./middleware/auth");
+const { ensureAuthenticated } = require("./middleware/auth");
 
 dotenv.config();
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server); // Initialize socket.io
-
-// Store io in app locals if needed later in routes
-app.set("io", io);
+const io = socketio(server);
 
 // Connect DB
 connectDB();
 
-// Middleware
+// Shared session middleware
+const sessionMiddleware = session({
+  secret: "foodlens_secret",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { sameSite: "lax" }
+});
+
+// Apply session to both Express and Socket.IO
+app.use(sessionMiddleware);
+io.use(sharedSession(sessionMiddleware, { autoSave: true }));
+
+// Other middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Session + Passport config
-app.use(session({
-  secret: "foodlens_secret",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    sameSite: "lax"
-  }
-}));
 app.use(passport.initialize());
 app.use(passport.session());
 
 // View engine
 app.set("view engine", "ejs");
+
+// Store io for use in routes (if needed)
+app.set("io", io);
 
 // API Routes
 app.use("/", homeRoutes);
@@ -61,14 +63,10 @@ app.use("/api/trends", trendsRoutes);
 app.use("/api/insight", insightRoutes);
 app.use("/api/predict", predictRoutes);
 app.use("/api/user", userRoutes);
-
-// Auth Routes (login, register, logout)
 app.use("/", authRoutes);
-
-// Admin-specific routes
 app.use("/", adminRoutes);
 
-// View Routes (protected)
+// View Routes
 app.get("/", ensureAuthenticated, async (req, res) => {
   try {
     const toast = req.session.toastMessage || null;
@@ -78,7 +76,7 @@ app.get("/", ensureAuthenticated, async (req, res) => {
 
     res.render("home", {
       user: {
-        ...req.user,  // keeps session fields like `username`, `role`
+        ...req.user,
         lastFilters: userFromDB.lastFilters,
         lastActivity: userFromDB.lastActivity
       },
@@ -90,46 +88,45 @@ app.get("/", ensureAuthenticated, async (req, res) => {
   }
 });
 
+app.get("/type", ensureAuthenticated, (req, res) => res.render("food_type", { user: req.user }));
+app.get("/demographics", ensureAuthenticated, (req, res) => res.render("demographics", { user: req.user }));
+app.get("/combined", ensureAuthenticated, (req, res) => res.render("combined_trends", { user: req.user }));
+app.get("/insight", ensureAuthenticated, (req, res) => res.render("insight", { user: req.user }));
+app.get("/predict", ensureAuthenticated, (req, res) => res.render("predict", { user: req.user }));
+app.get("/profile", ensureAuthenticated, (req, res) => res.render("profile", { user: req.user }));
 
-app.get("/type", ensureAuthenticated, (req, res) => {
-  res.render("food_type", { user: req.user });
-});
+// Socket.IO: Track unique active users
+const activeUsers = new Set();
 
-app.get("/demographics", ensureAuthenticated, (req, res) => {
-  res.render("demographics", { user: req.user });
-});
-
-app.get("/combined", ensureAuthenticated, (req, res) => {
-  res.render("combined_trends", { user: req.user });
-});
-
-app.get("/insight", ensureAuthenticated, (req, res) => {
-  res.render("insight", { user: req.user });
-});
-
-app.get("/predict", ensureAuthenticated, (req, res) => {
-  res.render("predict", { user: req.user });
-});
-
-app.get("/profile", ensureAuthenticated, (req, res) => {
-  res.render("profile", { user: req.user });
-});
-
-// Socket.IO connection logging and toast handling
 io.on("connection", (socket) => {
-  console.log("A user connected");
+  const userId = socket.handshake?.session?.passport?.user;
+  console.log("Socket connected. User ID:", userId);
 
-  // Broadcast toast message
+  if (userId) {
+    socket.userId = userId;
+    activeUsers.add(userId);
+    io.emit("activeUserCount", activeUsers.size);
+  }
+
+    // Add this for toast messages to work
   socket.on("toast", (msg) => {
-    socket.emit("toast", msg); // Emit only to the same user
+    // console.log("Toast received from client:", msg);
+    socket.emit("toast", msg); // echo back to client
   });
 
   socket.on("disconnect", () => {
-    console.log("A user disconnected");
+    const stillConnected = Array.from(io.sockets.sockets.values()).some(
+      s => s.userId === socket.userId
+    );
+
+    if (!stillConnected && socket.userId) {
+      activeUsers.delete(socket.userId);
+      io.emit("activeUserCount", activeUsers.size);
+    }
   });
 });
 
-// Start server with socket.io
+// Start server
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () =>
   console.log(`Server running with Socket.IO on http://localhost:${PORT}`)
