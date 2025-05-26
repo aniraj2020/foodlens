@@ -1,20 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Prediction & Future Trends</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Materialize CSS and Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+  <!-- Chart.js and Custom Styles -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="/style.css" />
 </head>
 
 <body class="container center-align">
 
-  <h5>Food Insecurity Prediction (2024–2026)</h5>
+  <h5 style="margin-top: 2rem;">Food Insecurity Prediction (2024–2026)</h5>
   <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
-    This chart visualizes actual food insecurity data (2018–2023) for the selected group and forecasts future trends from 2024 to 2026 using regression-based modeling. The prediction helps identify potential increases or improvements in food insecurity within specific demographics.
+    This chart visualizes actual food insecurity data (2018–2023) for the selected group and forecasts future trends from 2024 to 2026 using regression-based modeling.
   </p>
 
-  <!-- Dropdowns -->
+  <!-- Dropdown Filters -->
   <div class="row">
     <div class="input-field col s6">
       <select id="categorySelect">
@@ -35,18 +42,28 @@
   </div>
 
   <!-- Chart -->
-  <div class="chart-container">
+  <div class="chart-container" style="max-width: 900px; margin: 0 auto;">
     <canvas id="predictChart"></canvas>
   </div>
 
   <!-- Buttons -->
-  <div class="center-buttons">
-    <a href="/" class="btn blue">Back to Home</a>
-    <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">Reset</button>
+  <div class="row center-align" style="margin-top: 2rem; margin-bottom: 3rem;">
+    <a href="/dashboard" class="btn blue">
+      <i class="material-icons left">home</i>Back to Dashboard
+    </a>
+    <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">
+      <i class="material-icons left">refresh</i>Reset
+    </button>
   </div>
 
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      M.FormSelect.init(document.querySelectorAll('select'));
+    });
+  </script>
   <script src="/script_predict.js"></script>
+
 </body>
 </html>

@@ -12,10 +12,11 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="container">
+<body class="container center-align">
 
-  <h5 class="center-align" style="margin-top: 2rem;">Combined Demographic Trends Over Time</h5>
-  <p class="center-align grey-text text-darken-2" style="margin-bottom: 2rem;">
+  <h5 style="margin-top: 2rem;">Combined Demographic Trends Over Time</h5>
+
+  <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
     This chart shows how food insecurity has affected different demographic groups over the years. Select a group to compare trends.
   </p>
 
@@ -35,17 +36,19 @@
   <!-- Dynamic Checkboxes Area -->
   <div class="row" id="checkboxes" style="margin-bottom: 1rem;"></div>
 
-  <!-- Instruction text (optional) -->
-  <p id="chartInstruction" class="center-align grey-text text-darken-2"></p>
+  <!-- Instruction text -->
+  <p id="chartInstruction" class="grey-text text-darken-2"></p>
 
   <!-- Chart Container -->
-  <div class="chart-container">
+  <div class="chart-container" style="max-width: 900px; margin: 0 auto;">
     <canvas id="trendChart"></canvas>
   </div>
 
   <!-- Navigation Buttons -->
-  <div class="row center-align" style="margin-bottom: 3rem;">
-    <a href="/" class="btn blue"><i class="material-icons left">home</i>Back to Home</a>
+  <div class="row center-align" style="margin-top: 2rem; margin-bottom: 4rem;">
+    <a href="/dashboard" class="btn blue">
+      <i class="material-icons left">home</i>Back to Dashboard
+    </a>
     <a id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">
       <i class="material-icons left">refresh</i>Reset
     </a>
@@ -57,7 +60,6 @@
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       M.FormSelect.init(document.querySelectorAll('select'));
-      M.Tooltip.init(document.querySelectorAll('.tooltipped'));
     });
   </script>
   <script src="/script_combined_trends.js"></script>

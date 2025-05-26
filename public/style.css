@@ -28,19 +28,20 @@ h1, h2, h3, h4, h5 {
 #predictChart,
 #insightChart,
 #trendChart,
-#barChart{
+#barChart {
   width: 100% !important;
   max-width: 1000px;
   height: 500px !important;
   margin: 0 auto;
 }
 
-#pieChart{
+#pieChart {
   width: 100% !important;
   max-width: 800px;
   height: 800px !important;
   margin: 0 auto;
 }
+
 
 /* ---------------------------------------------------
    App Bar / Header
@@ -94,13 +95,10 @@ h1, h2, h3, h4, h5 {
   background-color: #e3f0e6;
 }
 
-.home-layout {
-  padding-top: 1rem;
-  max-width: 1400px;
-  width: 100%;
+.home-page-wrapper {
   display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  justify-content: center;
+  width: 100%;
 }
 
 .home-main {
@@ -108,6 +106,8 @@ h1, h2, h3, h4, h5 {
   gap: 3rem;
   align-items: flex-start;
   justify-content: space-between;
+  max-width: 1400px;
+  width: 100%;
 }
 
 .left-main {
@@ -198,6 +198,7 @@ h1, h2, h3, h4, h5 {
   margin-right: 0.5rem;
 }
 
+
 /* ---------------------------------------------------
    Informational Section
 ----------------------------------------------------- */
@@ -243,8 +244,9 @@ h1, h2, h3, h4, h5 {
   margin-bottom: 0.6rem;
 }
 
- /* ---------------------------------------------------
-   Filters & Form Elements 
+
+/* ---------------------------------------------------
+   Filters & Form Elements
 ----------------------------------------------------- */
 
 #checkboxes {
@@ -357,10 +359,12 @@ hr.section-divider {
 @media screen and (max-width: 1100px) {
   .home-main {
     flex-direction: column;
+    align-items: center;
   }
 
   .left-main, .right-info {
     max-width: 100%;
+    width: 100%;
   }
 
   .dashboard-grid {
@@ -391,5 +395,4 @@ hr.section-divider {
   font-size: 1.2rem;
   margin-bottom: 0.8rem;
 }
-
 

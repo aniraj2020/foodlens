@@ -1,33 +1,27 @@
-<h4>Login</h4>
+<h4 class="center-align">Login to FoodLens</h4>
+<p class="center-align">Please enter your credentials to access your dashboard.</p>
 
-<form id="loginForm" action="/login" method="POST">
-  <div class="input-field">
-    <input type="text" name="username" id="username" required />
-    <label for="username">Username</label>
+<div class="row">
+  <div class="col s12 m6 offset-m3">
+    <form id="loginForm" action="/login" method="POST">
+      <div class="input-field">
+        <input type="text" name="username" id="username" required />
+        <label for="username">Username</label>
+      </div>
+
+      <div class="input-field">
+        <input type="password" name="password" id="password" required />
+        <label for="password">Password</label>
+      </div>
+
+      <button type="submit" class="btn waves-effect waves-light full-width">Login</button>
+
+      <p class="center-align" style="margin-top: 20px;">
+        Don’t have an account? <a href="/register">Register</a>
+      </p>
+    </form>
   </div>
-
-  <div class="input-field">
-    <input type="password" name="password" id="password" required />
-    <label for="password">Password</label>
-  </div>
-
-  <button type="submit" class="btn">Login</button>
-</form>
-
-<p>Don't have an account? <a href="/register">Register</a></p>
-
-<!-- Show login error (if any) -->
-<% if (typeof error !== 'undefined' && error) { %>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      M.toast({
-        html: "<%= error %>",
-        classes: "rounded red lighten-1 white-text",
-        displayLength: 3000
-      });
-    });
-  </script>
-<% } %>
+</div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {

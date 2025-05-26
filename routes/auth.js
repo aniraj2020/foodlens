@@ -36,15 +36,13 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// Register Routes
+// ✅ Login + Register page routes: do NOT pass hideHeader!
 router.get("/register", showRegisterPage);
 router.post("/register", registerUser);
 
-// Login Routes
 router.get("/login", showLoginPage);
-router.post("/login", loginUser); // Use controller-based login logic
+router.post("/login", loginUser);
 
-// Logout
 router.get("/logout", logoutUser);
 
 module.exports = router;

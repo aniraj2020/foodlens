@@ -27,10 +27,10 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-// Connect to MongoDB
+// Connect to DB
 connectDB();
 
-// Session Middleware
+// Session setup
 const sessionMiddleware = session({
   secret: "foodlens_secret",
   resave: false,
@@ -44,20 +44,16 @@ io.use(sharedSession(sessionMiddleware, { autoSave: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
-// EJS + Layouts
+// View engine and layout
 app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.set("layout", "layout");
 app.set("io", io);
 
-//
 // ===== PUBLIC ROUTES =====
-//
-
 app.get("/", (req, res) => {
   res.render("landing", { title: "Welcome to FoodLens" });
 });
@@ -71,13 +67,14 @@ app.get("/contact", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.render("login", { title: "Login" }); 
+  res.render("login", { title: "Login" });
 });
 
-//
-// ===== AUTHENTICATED ROUTES =====
-//
+app.get("/register", (req, res) => {
+  res.render("register", { title: "Register" });
+});
 
+// ===== AUTHENTICATED ROUTES =====
 app.get("/dashboard", ensureAuthenticated, async (req, res) => {
   try {
     const toast = req.session.toastMessage || null;
@@ -87,6 +84,9 @@ app.get("/dashboard", ensureAuthenticated, async (req, res) => {
 
     res.render("home", {
       title: "Dashboard",
+      layout: "layout",
+      hideHeader: true,
+      hideFooter: true,
       user: {
         ...req.user,
         lastFilters: userFromDB.lastFilters,
@@ -101,28 +101,30 @@ app.get("/dashboard", ensureAuthenticated, async (req, res) => {
 });
 
 app.get("/type", ensureAuthenticated, (req, res) =>
-  res.render("food_type", { title: "Food Insecurity Types", user: req.user })
+  res.render("food_type", { title: "Food Insecurity Types", user: req.user, layout: false })
 );
+
 app.get("/demographics", ensureAuthenticated, (req, res) =>
-  res.render("demographics", { title: "Demographics", user: req.user })
+  res.render("demographics", { title: "Demographics", user: req.user, layout: false })
 );
+
 app.get("/combined", ensureAuthenticated, (req, res) =>
-  res.render("combined_trends", { title: "Combined Trends", user: req.user })
+  res.render("combined_trends", { title: "Combined Trends", user: req.user, layout: false })
 );
+
 app.get("/insight", ensureAuthenticated, (req, res) =>
-  res.render("insight", { title: "Insights", user: req.user })
+  res.render("insight", { title: "Insights", user: req.user, layout: false })
 );
+
 app.get("/predict", ensureAuthenticated, (req, res) =>
-  res.render("predict", { title: "Predict Future", user: req.user })
+  res.render("predict", { title: "Predict Future", user: req.user, layout: false })
 );
+
 app.get("/profile", ensureAuthenticated, (req, res) =>
-  res.render("profile", { title: "Profile", user: req.user })
+  res.render("profile", { title: "Profile", user: req.user, layout: false })
 );
 
-//
-// ===== API + AUTH ROUTES =====
-//
-
+// ===== API & AUTH ROUTES =====
 app.use("/", homeRoutes);
 app.use("/api/type", foodTypeRoutes);
 app.use("/api/demographics", demographicsRoutes);
@@ -133,10 +135,7 @@ app.use("/api/user", userRoutes);
 app.use("/", authRoutes);
 app.use("/", adminRoutes);
 
-//
-// ===== SOCKET.IO CONNECTION =====
-//
-
+// ===== SOCKET.IO =====
 const activeUsers = new Set();
 
 io.on("connection", (socket) => {
@@ -168,5 +167,5 @@ io.on("connection", (socket) => {
 // Start Server
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () =>
-  console.log(`Server running with Socket.IO on http://localhost:${PORT}`)
+  console.log(`Server running at http://localhost:${PORT}`)
 );
