@@ -3,8 +3,9 @@
 ----------------------------------------------------- */
 
 body {
+  overflow-x: hidden;
   margin: 0;
-  padding: 2rem;
+  padding: 0;
   background-color: #f4f6f8;
   font-family: 'Roboto', sans-serif;
   color: #333;
@@ -20,6 +21,111 @@ h1, h2, h3, h4, h5 {
   text-align: center;
 }
 
+/* ---------------------------------------------------
+   Dashboard Layout with Sidebar
+----------------------------------------------------- */
+
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 320px;
+  background-color: #263238;
+  color: white;
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  overflow-y: auto;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-header {
+  padding: 1.5rem;
+  background-color: #37474f;
+  border-bottom: 1px solid #455a64;
+}
+
+.sidebar-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-menu {
+  padding: 1rem 0;
+}
+
+.nav-item {
+  display: block;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav-item:hover {
+  background-color: #37474f;
+  color: #fff;
+  padding-left: 2rem;
+}
+
+.nav-item.active {
+  background-color: #1565c0;
+  color: #fff;
+  border-right: 4px solid #42a5f5;
+}
+
+.nav-item.green { background-color: #2e7d32; }
+.nav-item.green:hover { background-color: #388e3c; }
+
+.nav-item.blue { background-color: #1565c0; }
+.nav-item.blue:hover { background-color: #1976d2; }
+
+.nav-item.purple { background-color: #6a1b9a; }
+.nav-item.purple:hover { background-color: #7b1fa2; }
+
+.nav-item.orange { background-color: #ef6c00; }
+.nav-item.orange:hover { background-color: #f57c00; }
+
+.nav-item.grey { background-color: #424242; }
+.nav-item.grey:hover { background-color: #616161; }
+
+.nav-item.red { background-color: #c62828; }
+.nav-item.red:hover { background-color: #d32f2f; }
+
+.nav-item i {
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.main-content {
+  margin-left: 320px;
+  padding: 2rem 3rem;
+  width: calc(100% - 320px);
+  max-width: none;         
+  box-sizing: border-box;
+}
 
 /* ---------------------------------------------------
    Chart Styles
@@ -47,15 +153,25 @@ h1, h2, h3, h4, h5 {
 ----------------------------------------------------- */
 
 .app-bar {
-  width: 100vw;
+  position: fixed;
+  left: 0px;
+  top: 0;
+  right: 0;
+  height: 70px;
   background-color: #263238;
   color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  margin-bottom: 2rem;
+  padding: 0 3rem;
+  font-size: 1.3rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  z-index: 999;
+}
+
+.app-bar.with-sidebar {
+  left: 320px; 
 }
 
 .app-bar a {
@@ -69,7 +185,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .app-bar-center {
-  font-size: 28px;
+  font-size: 1.8rem;
   font-weight: bold;
   text-align: center;
 }
@@ -81,22 +197,25 @@ h1, h2, h3, h4, h5 {
   gap: 0.5rem;
 }
 
+/* Adjust main content to be below fixed app-bar */
+.main-content {
+  padding-top: 90px;
+}
 
 /* ---------------------------------------------------
-   Homepage Layout
+   Homepage Layout - UPDATED FOR WIDER CONTENT
 ----------------------------------------------------- */
 
 .home-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  margin: 0;
   background-color: #e3f0e6;
 }
 
 .home-layout {
   padding-top: 1rem;
-  max-width: 1400px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -105,21 +224,40 @@ h1, h2, h3, h4, h5 {
 
 .home-main {
   display: flex;
-  gap: 3rem;
+  gap: 4rem;
   align-items: flex-start;
   justify-content: space-between;
+  width: 100%;
+  margin: 0;
+  padding: 6rem 1rem;
+  box-sizing: border-box;
 }
 
 .left-main {
-  flex: 1;
-  max-width: 700px;
+  flex: none;
+  min-width: 580px;
+  max-width: 660px;
+  margin-right: auto; 
 }
 
 .right-info {
   flex: 1;
-  max-width: 600px;
+  min-width: 500px;
+  max-width: 660px;
+  margin-left: auto; 
 }
 
+.left-hero h5 {
+  font-size: 2.4rem;
+}
+
+.left-hero p,
+.info-section p,
+.info-section ul,
+.info-section li {
+  font-size: 1.3rem;
+  line-height: 1.9;
+}
 
 /* ---------------------------------------------------
    Intro Section (Left Top)
@@ -137,7 +275,6 @@ h1, h2, h3, h4, h5 {
   line-height: 1.6;
   color: #444;
 }
-
 
 /* ---------------------------------------------------
    Activity Card
@@ -164,9 +301,8 @@ h1, h2, h3, h4, h5 {
   margin-top: 1rem;
 }
 
-
 /* ---------------------------------------------------
-   Dashboard Grid Buttons
+   Dashboard Grid Buttons (for homepage)
 ----------------------------------------------------- */
 
 .dashboard-grid {
@@ -211,36 +347,38 @@ h1, h2, h3, h4, h5 {
   color: #333;
   line-height: 1.8;
   transition: all 0.3s ease;
+  height: fit-content;
 }
 
 .info-section h4 {
-  font-size: 3rem;
+  font-size: 2.2rem;
   color: #1565c0;
   margin-bottom: 1rem;
 }
 
 .info-section h5 {
-  font-size: 2rem;
+  font-size: 1.6rem;
   color: #2e7d32;
-  margin-top: 2.5rem;
+  margin-top: 2rem;
   margin-bottom: 1rem;
 }
 
 .info-section p {
   text-align: justify;
-  font-size: 1.3rem;
-  line-height: 1.75;
+  font-size: 1.1rem;
+  line-height: 1.6;
 }
 
 .info-section ul {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   margin-top: 1rem;
   margin-left: 1.5rem;
   list-style-type: disc;
 }
 
 .info-section ul li {
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
 }
 
  /* ---------------------------------------------------
@@ -276,7 +414,6 @@ h1, h2, h3, h4, h5 {
   margin-right: 6px;
 }
 
-
 /* ---------------------------------------------------
    Admin Panel Enhancements
 ----------------------------------------------------- */
@@ -310,7 +447,6 @@ h1, h2, h3, h4, h5 {
   color: white;
 }
 
-
 /* ---------------------------------------------------
    Buttons
 ----------------------------------------------------- */
@@ -336,7 +472,6 @@ h1, h2, h3, h4, h5 {
   outline-offset: 2px;
 }
 
-
 /* ---------------------------------------------------
    Utility
 ----------------------------------------------------- */
@@ -349,18 +484,63 @@ hr.section-divider {
   margin: 2rem auto 3rem;
 }
 
+.profile-label {
+  font-size: 1.2rem;
+  margin-bottom: 0.8rem;
+}
 
 /* ---------------------------------------------------
    Responsive Enhancements
 ----------------------------------------------------- */
 
+@media screen and (max-width: 1200px) {
+  .home-main {
+    gap: 1.5rem;
+  }
+  
+  .right-info {
+    min-width: 300px;
+    max-width: 400px;
+  }
+}
+
 @media screen and (max-width: 1100px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .mobile-menu-btn {
+    display: block;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+    background-color: #263238;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
   .home-main {
     flex-direction: column;
+    gap: 2rem;
   }
 
   .left-main, .right-info {
     max-width: 100%;
+    min-width: 0;
   }
 
   .dashboard-grid {
@@ -385,11 +565,17 @@ hr.section-divider {
     width: 90%;
     margin: 2rem auto;
   }
+  
+  .main-content {
+    padding: 1rem;
+  }
+  
+  .home-main {
+    padding: 1rem;
+  }
 }
 
-.profile-label {
-  font-size: 1.2rem;
-  margin-bottom: 0.8rem;
+/* Mobile menu button (hidden by default) */
+.mobile-menu-btn {
+  display: none;
 }
-
-

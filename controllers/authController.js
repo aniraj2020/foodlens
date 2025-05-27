@@ -46,9 +46,11 @@ const loginUser = (req, res, next) => {
     req.logIn(user, (err) => {
       if (err) return next(err);
 
-      //toast for all users on successful login
+      // Toast message after login
       req.session.toastMessage = `Welcome ${user.username}`;
-      return res.redirect("/");
+
+      // Redirect to dashboard or home after login
+      return res.redirect("/dashboard"); 
     });
   })(req, res, next);
 };

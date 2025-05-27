@@ -132,4 +132,5 @@ document.addEventListener("DOMContentLoaded", function () {
   if (window.location.pathname !== "/admin-panel") {
     socket.emit("pageVisited", { page: window.location.pathname });
   }
+
 });

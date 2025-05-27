@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <title>Food Insecurity Insight</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Materialize & Chart.js -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
@@ -53,16 +55,18 @@
     </div>
 
     <!-- Alert Message -->
-    <div id="alertBox" style="display: none;" class="alert red white-text z-depth-1" role="alert"></div>
+    <div id="alertBox" class="alert red white-text z-depth-1" style="display: none;"></div>
 
     <!-- Chart -->
-    <div class="chart-container">
+    <div class="chart-container" style="max-width: 900px; margin: 0 auto;">
       <canvas id="insightChart"></canvas>
     </div>
 
     <!-- Buttons -->
-    <div style="margin-top: 2rem;">
-      <a href="/" class="btn blue"><i class="material-icons left">home</i>Back to Home</a>
+    <div class="row center-align" style="margin-top: 2rem; margin-bottom: 4rem;">
+      <a href="/dashboard" class="btn blue">
+        <i class="material-icons left">home</i>Back to Dashboard
+      </a>
       <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">
         <i class="material-icons left">refresh</i>Reset
       </button>
