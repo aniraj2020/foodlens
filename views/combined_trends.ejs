@@ -12,55 +12,71 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="container">
-
-  <h5 class="center-align" style="margin-top: 2rem;">Combined Demographic Trends Over Time</h5>
-  <p class="center-align grey-text text-darken-2" style="margin-bottom: 2rem;">
-    This chart shows how food insecurity has affected different demographic groups over the years. Select a group to compare trends.
-  </p>
-
-  <!-- Dropdown Selection -->
-  <div class="row">
-    <div class="input-field col s12 m6 offset-m3">
-      <select id="categorySelect">
-        <option value="" disabled selected>Select Demographic Category</option>
-        <option value="gender">Gender</option>
-        <option value="age_group">Age</option>
-        <option value="suburb_group">Suburb</option>
-      </select>
-      <label>Select Demographic Category</label>
+<body class="home-body">
+  <!-- App Bar -->
+  <div class="app-bar">
+    <div class="app-bar-left">
+      <i class="material-icons left">code</i>
+      <a href="https://github.com/aniraj2020/FoodLens" target="_blank">GitHub Repo</a>
+    </div>
+    <div class="app-bar-center">
+      Welcome to FoodLens, <%= user.username %>!
+    </div>
+    <div class="app-bar-right">
+      <a href="/logout" class="btn red">Logout</a>
     </div>
   </div>
 
-  <!-- Dynamic Checkboxes Area -->
-  <div class="row" id="checkboxes" style="margin-bottom: 1rem;"></div>
+  <!-- Page Content -->
+  <div class="container center-align">
+    <h5 style="margin-top: 2rem;">Combined Demographic Trends Over Time</h5>
+    <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
+      This chart shows how food insecurity has affected different demographic groups over the years. Select a group to compare trends.
+    </p>
 
-  <!-- Instruction text (optional) -->
-  <p id="chartInstruction" class="center-align grey-text text-darken-2"></p>
+    <!-- Dropdown -->
+    <div class="row">
+      <div class="input-field col s12 m6 offset-m3">
+        <select id="categorySelect">
+          <option value="" disabled selected>Select Demographic Category</option>
+          <option value="gender">Gender</option>
+          <option value="age_group">Age</option>
+          <option value="suburb_group">Suburb</option>
+        </select>
+        <label>Select Demographic Category</label>
+      </div>
+    </div>
 
-  <!-- Chart Container -->
-  <div class="chart-container">
-    <canvas id="trendChart"></canvas>
-  </div>
+    <!-- Checkbox Container -->
+    <div class="row" id="checkboxes" style="margin-bottom: 1rem;"></div>
 
-  <!-- Navigation Buttons -->
-  <div class="row center-align" style="margin-bottom: 3rem;">
-    <a href="/" class="btn blue"><i class="material-icons left">home</i>Back to Home</a>
-    <a id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">
-      <i class="material-icons left">refresh</i>Reset
-    </a>
+    <!-- Instruction Text -->
+    <p id="chartInstruction" class="grey-text text-darken-2"></p>
+
+    <!-- Chart -->
+    <div class="chart-container">
+      <canvas id="trendChart"></canvas>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div style="margin: 2rem 0;">
+      <a href="/" class="btn blue"><i class="material-icons left">home</i>Back to Home</a>
+      <a id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">
+        <i class="material-icons left">refresh</i>Reset
+      </a>
+    </div>
   </div>
 
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
+  <script src="/socket_init.js"></script>
+  <script src="/script_combined_trends.js"></script>
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       M.FormSelect.init(document.querySelectorAll('select'));
-      M.Tooltip.init(document.querySelectorAll('.tooltipped'));
     });
   </script>
-  <script src="/script_combined_trends.js"></script>
-
 </body>
 </html>

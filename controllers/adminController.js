@@ -1,21 +1,17 @@
 const User = require("../models/User");
+const UsageLog = require("../models/UsageLog");
 createCsvWriter = require("csv-writer").createObjectCsvStringifier;
 
 // Show all users to admin
 const showAllUsers = async (req, res) => {
   try {
     const { search, role, page = 1 } = req.query;
-    const limit = 6; // Users per page
+    const limit = 6;
     const skip = (page - 1) * limit;
 
-    // Build dynamic query
     const query = {};
-    if (search) {
-      query.username = { $regex: new RegExp(search, "i") }; // case-insensitive search
-    }
-    if (role) {
-      query.role = role;
-    }
+    if (search) query.username = { $regex: new RegExp(search, "i") };
+    if (role) query.role = role;
 
     const totalUsers = await User.countDocuments(query);
     const totalPages = Math.ceil(totalUsers / limit);
@@ -24,13 +20,36 @@ const showAllUsers = async (req, res) => {
       .sort({ role: 1 })
       .skip(skip)
       .limit(limit);
-    
+
     const toast = req.session.toastMessage || null;
     delete req.session.toastMessage;
 
-    res.render("admin_users", { user: req.user, users, role, search, page: parseInt(page), totalPages,toast, });
+    //Fetch usage stats
+    const usageStats = await UsageLog.aggregate([
+      { $group: { _id: "$page", count: { $sum: 1 } } },
+      { $sort: { count: -1 } }
+    ]);
+
+    //Fetch latest 5 logs
+    const recentLogs = await UsageLog.find({})
+      .sort({ timestamp: -1 })
+      .limit(5)
+      .lean();
+
+    res.render("admin_users", {
+      user: req.user,
+      users,
+      role,
+      search,
+      page: parseInt(page),
+      totalPages,
+      toast,
+      usageStats,
+      recentLogs
+    });
+
   } catch (err) {
-    console.error("Error fetching users:", err);
+    console.error("Error fetching users or usage stats:", err);
     res.status(500).send("Server Error");
   }
 };
@@ -47,23 +66,27 @@ const buildRedirectURL = (base, query) => {
 // Clear a user's history (filters + activity)
 const clearUserHistory = async (req, res) => {
   const { userId } = req.body;
-
   if (!userId) return res.status(400).json({ message: "User ID required" });
 
   try {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
-    
+
     if (user.username === 'adminuser') {
       return res.status(403).send("You cannot modify the super admin.");
     }
 
-    user.lastFilters = {};
-    user.lastActivity = null;
-    await user.save();
-    
-    req.session.toastMessage = "History cleared for user!";
-    //res.redirect(buildRedirectURL('/admin-panel', req.query));
+    const hasActivity = user.lastActivity !== null;
+    const hasFilters = user.lastFilters && Object.keys(user.lastFilters).length > 0;
+
+    if (!hasActivity && !hasFilters) {
+      req.session.toastMessage = "History already empty";
+    } else {
+      user.lastFilters = {};
+      user.lastActivity = null;
+      await user.save();
+      req.session.toastMessage = "History cleared for user!";
+    }
 
     res.redirect(buildRedirectURL('/admin-panel', req.body));
 
@@ -87,6 +110,11 @@ const toggleUserRole = async (req, res) => {
 
     user.role = user.role === "admin" ? "user" : "admin";
     await user.save();
+
+    // If API request (Postman), return JSON
+    if (req.headers.accept?.includes("application/json")) {
+      return res.status(200).json({ message: "Role Updated", newRole: user.role });
+    }
     
     req.session.toastMessage = "Role Updated!!!";
     //res.redirect(buildRedirectURL('/admin-panel', req.query));
@@ -177,10 +205,22 @@ const exportUserCSV = async (req, res) => {
   }
 };
 
+// POST /admin/clear-analytics
+const clearAnalytics = async (req, res) => {
+  try {
+    await UsageLog.deleteMany({ page: { $ne: 'admin-panel' } });
+    res.redirect('/admin-panel');
+  } catch (err) {
+    console.error("Error clearing analytics:", err);
+    res.status(500).send("Failed to clear analytics.");
+  }
+};
+
 module.exports = {
   showAllUsers,
   clearUserHistory,
   toggleUserRole,
   deleteUser,
-  exportUserCSV
+  exportUserCSV,
+  clearAnalytics
 };

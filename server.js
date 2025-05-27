@@ -8,15 +8,15 @@ const http = require("http");
 const socketio = require("socket.io");
 const sharedSession = require("express-socket.io-session");
 const User = require("./models/User");
+const UsageLog = require("./models/UsageLog");
 
-// Route imports
 const homeRoutes = require("./routes/home");
-const foodTypeRoutes = require('./routes/type');
-const demographicsRoutes = require('./routes/demographics');
-const trendsRoutes = require('./routes/trends'); 
-const insightRoutes = require('./routes/insight');
-const predictRoutes = require('./routes/predict');
-const authRoutes = require('./routes/auth');
+const foodTypeRoutes = require("./routes/type");
+const demographicsRoutes = require("./routes/demographics");
+const trendsRoutes = require("./routes/trends");
+const insightRoutes = require("./routes/insight");
+const predictRoutes = require("./routes/predict");
+const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const userRoutes = require("./routes/user");
 const { ensureAuthenticated } = require("./middleware/auth");
@@ -26,36 +26,62 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-// Connect DB
 connectDB();
 
-// Shared session middleware
 const sessionMiddleware = session({
   secret: "foodlens_secret",
   resave: false,
   saveUninitialized: false,
   cookie: { sameSite: "lax" }
 });
-
-// Apply session to both Express and Socket.IO
 app.use(sessionMiddleware);
 io.use(sharedSession(sessionMiddleware, { autoSave: true }));
 
-// Other middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
-
 app.use(passport.initialize());
 app.use(passport.session());
-
-// View engine
 app.set("view engine", "ejs");
-
-// Store io for use in routes (if needed)
 app.set("io", io);
 
-// API Routes
+const normalizePageName = (raw) => {
+  const path = raw.toLowerCase().replace(/^\/+/, "").split("?")[0];
+  if (path.includes("type")) return "type";
+  if (path.includes("demographics")) return "demographics";
+  if (path.includes("predict")) return "predict";
+  if (path.includes("combined")) return "combined";
+  if (path.includes("insight")) return "insight";
+  if (path === "") return "/";
+  return path;
+};
+
+// app.use(async (req, res, next) => {
+//   if (
+//     req.user &&
+//     req.user.role !== 'admin' &&
+//     req.method === 'GET' &&
+//     !req.path.startsWith('/socket.io') &&
+//     !req.path.includes('.')
+//   ) {
+//     try {
+//       const cleanPage = normalizePageName(req.path);
+//       const recent = await UsageLog.findOne({ userId: req.user._id, page: cleanPage }).sort({ timestamp: -1 });
+//       if (!recent || (Date.now() - new Date(recent.timestamp).getTime()) > 3000) {
+//         await UsageLog.create({
+//           userId: req.user._id,
+//           username: req.user.username,
+//           page: cleanPage,
+//           timestamp: new Date()
+//         });
+//       }
+//     } catch (err) {
+//       console.error("Middleware usage log error:", err.message);
+//     }
+//   }
+//   next();
+// });
+
 app.use("/", homeRoutes);
 app.use("/api/type", foodTypeRoutes);
 app.use("/api/demographics", demographicsRoutes);
@@ -66,7 +92,19 @@ app.use("/api/user", userRoutes);
 app.use("/", authRoutes);
 app.use("/", adminRoutes);
 
-// View Routes
+const logFeatureUsage = async (req, pageName) => {
+  if (req.user.role === 'admin') return;
+  try {
+    await UsageLog.create({
+      userId: req.user._id,
+      username: req.user.username,
+      page: pageName
+    });
+  } catch (err) {
+    console.error("UsageLog error:", err.message);
+  }
+};
+
 app.get("/", ensureAuthenticated, async (req, res) => {
   try {
     const toast = req.session.toastMessage || null;
@@ -83,42 +121,86 @@ app.get("/", ensureAuthenticated, async (req, res) => {
       welcomeMessage: toast
     });
   } catch (err) {
-    console.error("Error loading home page user data:", err);
+    console.error("Home page error:", err);
     res.redirect("/logout");
   }
 });
 
-app.get("/type", ensureAuthenticated, (req, res) => res.render("food_type", { user: req.user }));
-app.get("/demographics", ensureAuthenticated, (req, res) => res.render("demographics", { user: req.user }));
-app.get("/combined", ensureAuthenticated, (req, res) => res.render("combined_trends", { user: req.user }));
-app.get("/insight", ensureAuthenticated, (req, res) => res.render("insight", { user: req.user }));
-app.get("/predict", ensureAuthenticated, (req, res) => res.render("predict", { user: req.user }));
-app.get("/profile", ensureAuthenticated, (req, res) => res.render("profile", { user: req.user }));
+app.get("/type", ensureAuthenticated, async (req, res) => {
+  await logFeatureUsage(req, "type");
+  res.render("food_type", { user: req.user });
+});
 
-// Socket.IO: Track unique active users
+app.get("/demographics", ensureAuthenticated, async (req, res) => {
+  await logFeatureUsage(req, "demographics");
+  res.render("demographics", { user: req.user });
+});
+
+app.get("/combined", ensureAuthenticated, async (req, res) => {
+  await logFeatureUsage(req, "combined");
+  res.render("combined_trends", { user: req.user });
+});
+
+app.get("/insight", ensureAuthenticated, async (req, res) => {
+  await logFeatureUsage(req, "insight");
+  res.render("insight", { user: req.user });
+});
+
+app.get("/predict", ensureAuthenticated, async (req, res) => {
+  await logFeatureUsage(req, "predict");
+  res.render("predict", { user: req.user });
+});
+
+app.get("/profile", ensureAuthenticated, (req, res) => {
+  res.render("profile", { user: req.user });
+});
+
 const activeUsers = new Set();
 
 io.on("connection", (socket) => {
   const userId = socket.handshake?.session?.passport?.user;
-  console.log("Socket connected. User ID:", userId);
-
   if (userId) {
     socket.userId = userId;
     activeUsers.add(userId);
     io.emit("activeUserCount", activeUsers.size);
   }
 
-    // Add this for toast messages to work
   socket.on("toast", (msg) => {
-    // console.log("Toast received from client:", msg);
-    socket.emit("toast", msg); // echo back to client
+    socket.emit("toast", msg);
+  });
+
+  socket.on("pageVisited", async ({ page }) => {
+    if (!userId) return;
+    try {
+      const user = await User.findById(userId).lean();
+      if (!user || user.role === "admin") return;
+
+      const cleanPage = normalizePageName(page);
+
+      const recent = await UsageLog.findOne({
+        userId: user._id,
+        page: cleanPage
+      }).sort({ timestamp: -1 });
+
+      if (!recent || (Date.now() - new Date(recent.timestamp).getTime()) > 3000) {
+        await UsageLog.create({
+          userId: user._id,
+          username: user.username,
+          page: cleanPage,
+          timestamp: new Date()
+        });
+        io.emit("refreshUsageAnalytics");
+        io.emit("refreshUserInfo"); 
+      }
+    } catch (err) {
+      console.error("Error in pageVisited log:", err.message);
+    }
   });
 
   socket.on("disconnect", () => {
     const stillConnected = Array.from(io.sockets.sockets.values()).some(
       s => s.userId === socket.userId
     );
-
     if (!stillConnected && socket.userId) {
       activeUsers.delete(socket.userId);
       io.emit("activeUserCount", activeUsers.size);
@@ -126,8 +208,12 @@ io.on("connection", (socket) => {
   });
 });
 
-// Start server
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, () =>
-  console.log(`Server running with Socket.IO on http://localhost:${PORT}`)
-);
+
+if (require.main === module) {
+  server.listen(PORT, () =>
+    console.log(`Server running with Socket.IO on http://localhost:${PORT}`)
+  );
+}
+
+module.exports = app;

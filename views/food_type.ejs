@@ -1,27 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>FoodLens Dashboard</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>Food Insecurity Types - FoodLens</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/socket_init.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="container center-align">
 
-  <h4 class="center-align" style="margin-top: 2rem;">Food Insecurity Types Distribution</h4>
+<body class="home-body" data-welcome="<%= typeof welcomeMessage !== 'undefined' ? welcomeMessage : '' %>">
 
-  <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
-    This chart shows the distribution of reported food insecurity types in Melbourne.
-  </p>
-
-  <div class="chart-container" style="max-width: 800px; margin: 0 auto;">
-    <canvas id="pieChart"></canvas>
+  <!-- App Bar -->
+  <div class="app-bar">
+    <div class="app-bar-left">
+      <i class="material-icons left">code</i>
+      <a href="https://github.com/aniraj2020/FoodLens" target="_blank">GitHub Repo</a>
+    </div>
+    <div class="app-bar-center">
+      Welcome to FoodLens, <%= user.username %>!
+    </div>
+    <div class="app-bar-right">
+      <a href="/logout" class="btn red">Logout</a>
+    </div>
   </div>
 
-  <div class="center-btn">
-    <a href="/" class="btn blue">Back to Home</a>
+  <!-- Main Content -->
+  <div class="container center-align">
+    <h4 style="margin-top: 2rem;">Food Insecurity Types Distribution</h4>
+
+    <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
+      This chart shows the distribution of reported food insecurity types in Melbourne.
+    </p>
+
+    <div class="chart-container">
+      <canvas id="pieChart"></canvas>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <a href="/" class="btn blue">Back to Home</a>
+    </div>
   </div>
 
+  <!-- Scripts -->
   <script src="/script_type.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

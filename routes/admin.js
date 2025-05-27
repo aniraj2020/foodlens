@@ -5,7 +5,8 @@ const { showAllUsers,
     clearUserHistory,
     toggleUserRole,
     deleteUser,
-    exportUserCSV
+    exportUserCSV,
+    clearAnalytics
 } = require("../controllers/adminController");
 
 // Route: /admin-panel
@@ -20,5 +21,8 @@ router.post("/admin/delete-user", ensureAdmin, deleteUser);
 
 // Export User Activity Logs as CSV
 router.get("/admin/export-csv", ensureAdmin, exportUserCSV);
+
+// Clear Anlytics
+router.post("/admin/clear-analytics", ensureAdmin, clearAnalytics);
 
 module.exports = router;

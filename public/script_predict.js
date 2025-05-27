@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const socket = io();
   const categorySelect = document.getElementById("categorySelect");
   const groupSelect = document.getElementById("groupSelect");
   const ctx = document.getElementById("predictChart").getContext("2d");
@@ -26,12 +27,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   groupSelect.addEventListener("change", renderChart);
 
-  // Place reset listener AFTER categorySelect, groupSelect, and chart are defined
   document.getElementById("resetButton").addEventListener("click", () => {
     categorySelect.value = "";
     groupSelect.innerHTML = '<option value="" disabled selected>Select Group</option>';
-
     M.FormSelect.init(categorySelect);
+
     const inst = M.FormSelect.getInstance(groupSelect);
     if (inst) inst.destroy();
     M.FormSelect.init(groupSelect);
@@ -43,6 +43,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.scrollTo(0, 0);
   });
+
+  function emitPageVisitIfNeeded() {
+    if (window.location.pathname !== "/admin-panel") {
+      socket.emit("pageVisited", { page: window.location.pathname });
+    }
+  }
 
   async function applySavedFilters() {
     try {
@@ -57,6 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
       await loadGroups(filters.category, filters.group);
 
       isInitialLoad = false;
+      emitPageVisitIfNeeded();
     } catch (err) {
       console.error("Error applying saved filters:", err);
     }
@@ -69,16 +76,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
       groupSelect.innerHTML = '<option value="" disabled selected>Select Group</option>';
       values.forEach(val => {
-        const option = document.createElement("option");
-        
         const normalizedVal = val.trim().replace(/\s+/g, " ").replace(/(\d{2})\s*\+\s*years/, "$1+ years");
+        const option = document.createElement("option");
         option.value = normalizedVal;
         option.textContent = normalizedVal;
-
-        if (isInitialLoad && preselect === val) {
-          option.selected = true;
-        }
-
+        if (isInitialLoad && preselect === val) option.selected = true;
         groupSelect.appendChild(option);
       });
 
@@ -94,32 +96,26 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-function validateSelections() {
-  console.log("validateSelections called");
+  function validateSelections() {
+    const category = categorySelect.value;
+    const group = groupSelect.value;
+    const categoryInvalid = !category || categorySelect.selectedIndex === 0;
+    const groupInvalid = !group || groupSelect.selectedIndex === 0;
 
-  const category = categorySelect.value;
-  const group = groupSelect.value;
-
-  // If default selected OR no value
-  const categoryInvalid = !category || categorySelect.selectedIndex === 0;
-  const groupInvalid = !group || groupSelect.selectedIndex === 0;
-
-  if (categoryInvalid || groupInvalid) {
-    M.toast({
-      html: "Please select both a category and a group.",
-      classes: "rounded red lighten-1 white-text"
-    });
-    return false;
+    if (categoryInvalid || groupInvalid) {
+      M.toast({
+        html: "Please select both a category and a group.",
+        classes: "rounded red lighten-1 white-text"
+      });
+      return false;
+    }
+    return true;
   }
-
-  return true;
-}
 
   async function renderChart() {
     if (!validateSelections()) return;
 
     const category = categorySelect.value;
-
     const group = groupSelect.value?.trim().replace(/\s+/g, " ").replace(/(\d{2})\s*\+\s*years/, "$1+ years");
 
     document.body.style.cursor = "wait";
@@ -197,6 +193,8 @@ function validateSelections() {
           }
         }
       });
+
+      emitPageVisitIfNeeded();
     } catch (err) {
       console.error("Prediction chart error:", err);
       M.toast({
@@ -207,4 +205,7 @@ function validateSelections() {
       document.body.style.cursor = "default";
     }
   }
+
+  // Also emit once on page load
+  emitPageVisitIfNeeded();
 });

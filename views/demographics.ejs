@@ -4,45 +4,66 @@
   <meta charset="UTF-8">
   <title>Demographic Visualization</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/style.css" />
+  
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/socket_init.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="container center-align">
 
-  <h4>Food Insecurity by Demographic Group</h4>
-
-  <!-- Year Dropdown -->
-  <div class="row">
-    <div class="input-field col s12 m6 offset-m3">
-      <select id="yearSelect">
-        <option value="All" selected>All Years</option>
-        <option value="2023">2023</option>
-        <option value="2022">2022</option>
-        <option value="2021">2021</option>
-        <option value="2020">2020</option>
-        <option value="2019">2019</option>
-        <option value="2018">2018</option>
-      </select>
-      <label>Select Year</label>
+<body class="home-body">
+  <!-- App Bar -->
+  <div class="app-bar">
+    <div class="app-bar-left">
+      <i class="material-icons left">code</i>
+      <a href="https://github.com/aniraj2020/FoodLens" target="_blank">GitHub Repo</a>
+    </div>
+    <div class="app-bar-center">
+      Welcome to FoodLens, <%= user.username %>!
+    </div>
+    <div class="app-bar-right">
+      <a href="/logout" class="btn red">Logout</a>
     </div>
   </div>
 
-  <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
-    This chart displays the number of people affected by food insecurity, by various respondent groups. Select a year to explore changes over time.
-  </p>
+  <!-- Main Content -->
+  <div class="container center-align">
+    <h4 style="margin-top: 2rem;">Food Insecurity by Demographic Group</h4>
 
+    <!-- Year Dropdown -->
+    <div class="row" style="margin-top: 2rem;">
+      <div class="input-field col s12 m6 offset-m3">
+        <select id="yearSelect">
+          <option value="All" selected>All Years</option>
+          <option value="2023">2023</option>
+          <option value="2022">2022</option>
+          <option value="2021">2021</option>
+          <option value="2020">2020</option>
+          <option value="2019">2019</option>
+          <option value="2018">2018</option>
+        </select>
+        <label>Select Year</label>
+      </div>
+    </div>
 
-  <!-- Chart -->
-  <div class="chart-container">
-    <canvas id="barChart"></canvas>
-  </div>
+    <!-- Description -->
+    <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
+      This chart displays the number of people affected by food insecurity, by various respondent groups. Select a year to explore changes over time.
+    </p>
 
-  <!-- Reset and Back Buttons -->
-  <div class="center-buttons">
-    <a href="/" class="btn blue">Back to Home</a>
-    <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">Reset</button>
+    <!-- Chart -->
+    <div class="chart-container">
+      <canvas id="barChart"></canvas>
+    </div>
+
+    <!-- Reset and Back Buttons -->
+    <div style="margin-top: 2rem;">
+      <a href="/" class="btn blue">Back to Home</a>
+      <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">Reset</button>
+    </div>
   </div>
 
   <!-- Scripts -->
@@ -53,6 +74,5 @@
     });
   </script>
   <script src="/script_demographics.js"></script>
-
 </body>
 </html>
