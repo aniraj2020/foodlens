@@ -1,0 +1,521 @@
+{
+	"id": "2043a227-5ca4-48ef-8c0b-f6e57e2780a0",
+	"name": "FoodLens API Tests",
+	"timestamp": "2025-05-27T01:08:21.500Z",
+	"collection_id": "34179154-b2201995-99bb-4fbe-907d-53d6a744abd3",
+	"folder_id": 0,
+	"environment_id": "34179154-2201a6ec-6f49-4d53-854b-bf5038aee6e4",
+	"totalPass": 29,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2025-05-27T01:08:20.919Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "68b3bfaf-a322-464b-bac2-60614f24916b",
+			"name": "Login (Session Auth)",
+			"url": "http://localhost:3001/login",
+			"time": 5,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200 or 302": true,
+				"Login should redirect or show homepage": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200 or 302": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Login should redirect or show homepage": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Status code is 200 or 302": true,
+					"Login should redirect or show homepage": true
+				}
+			]
+		},
+		{
+			"id": "663984da-0660-4f41-9d3f-2ff24306125e",
+			"name": "Get Insecurity Types",
+			"url": "http://localhost:3001/api/type",
+			"time": 5,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response contains 'labels' and 'values'": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains 'labels' and 'values'": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response contains 'labels' and 'values'": true
+				}
+			]
+		},
+		{
+			"id": "e9dd30f9-76bb-487c-a57d-698f62d3b781",
+			"name": "Get Demographics (2023)",
+			"url": "http://localhost:3001/api/demographics?year=2023",
+			"time": 5,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response contains 'labels' and 'values' arrays": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains 'labels' and 'values' arrays": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response contains 'labels' and 'values' arrays": true
+				}
+			]
+		},
+		{
+			"id": "bed0cae1-e60a-46a1-964a-f8f7d6d20082",
+			"name": "Get Trends Values (Gender)",
+			"url": "http://localhost:3001/api/trends/values?category=gender",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response contains values array": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains values array": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response contains values array": true
+				}
+			]
+		},
+		{
+			"id": "57033431-5725-43c3-8daa-3411545bdde3",
+			"name": "Get Prediction (Gender → Female)",
+			"url": "http://localhost:3001/api/predict?category=gender&group=Female",
+			"time": 5,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Prediction response has correct keys": true,
+				"Actual and predicted are arrays": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Prediction response has correct keys": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Actual and predicted are arrays": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Prediction response has correct keys": true,
+					"Actual and predicted are arrays": true
+				}
+			]
+		},
+		{
+			"id": "b46798c6-74cf-4724-9008-6a6a61f18df9",
+			"name": "Get Insight (Gender → Female)",
+			"url": "http://localhost:3001/api/insight?category=gender&group=Female",
+			"time": 5,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Insight response includes years and datasets": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Insight response includes years and datasets": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Insight response includes years and datasets": true
+				}
+			]
+		},
+		{
+			"id": "6f54dc0c-0429-4b91-b815-7fa2d97b36d0",
+			"name": "Save Chart Filters (Insight - Gender Female)",
+			"url": "http://localhost:3001/api/user/filters",
+			"time": 5,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Filter save success message": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Filter save success message": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Filter save success message": true
+				}
+			]
+		},
+		{
+			"id": "e11cc459-8ba9-44d2-a120-10b1daa39614",
+			"name": "Get Saved Filters (Insight)",
+			"url": "http://localhost:3001/api/user/filters?chart=insight",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Returns saved filters": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Returns saved filters": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Returns saved filters": true
+				}
+			]
+		},
+		{
+			"id": "1e50845d-1a37-412d-818f-2d1e6913e1de",
+			"name": "Admin – Export CSV",
+			"url": "http://localhost:3001/admin/export-csv",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Responds with HTTP 200": true,
+				"Returns a CSV file": true,
+				"CSV contains expected headers": true
+			},
+			"testPassFailCounts": {
+				"Responds with HTTP 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Returns a CSV file": {
+					"pass": 1,
+					"fail": 0
+				},
+				"CSV contains expected headers": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Responds with HTTP 200": true,
+					"Returns a CSV file": true,
+					"CSV contains expected headers": true
+				}
+			]
+		},
+		{
+			"id": "d3e561d1-bb9e-4937-9c70-e31b69b1502d",
+			"name": "Admin – Export CSV (Filtered: testuser, role=user)",
+			"url": "http://localhost:3001/admin/export-csv?search=adminuser&role=admin",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Returns CSV for filtered search": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Returns CSV for filtered search": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Returns CSV for filtered search": true
+				}
+			]
+		},
+		{
+			"id": "c70fc7fa-589d-40b3-bc3f-8421fb6699fd",
+			"name": "Admin – Toggle User Role",
+			"url": "http://localhost:3001/admin/toggle-role",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status is 200 or 403": true,
+				"Response is not JSON (probably redirected)": true,
+				"Response has expected JSON fields": true
+			},
+			"testPassFailCounts": {
+				"Status is 200 or 403": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is not JSON (probably redirected)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has expected JSON fields": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Status is 200 or 403": true,
+					"Response is not JSON (probably redirected)": true,
+					"Response has expected JSON fields": true
+				}
+			]
+		},
+		{
+			"id": "db555394-e27d-4b24-b56c-aa243e107561",
+			"name": "Clear History",
+			"url": "http://localhost:3001/admin/clear-user-history",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Responds with HTTP 200": true,
+				"History status is correctly reported": true
+			},
+			"testPassFailCounts": {
+				"Responds with HTTP 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"History status is correctly reported": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Responds with HTTP 200": true,
+					"History status is correctly reported": true
+				}
+			]
+		},
+		{
+			"id": "1fe4d01c-e84b-4d10-8923-51f9eb69ac03",
+			"name": "Delete User",
+			"url": "http://localhost:3001/admin/delete-user",
+			"time": 21,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Responds with HTTP 200 or 404": true,
+				"User deletion outcome is correctly shown": true
+			},
+			"testPassFailCounts": {
+				"Responds with HTTP 200 or 404": {
+					"pass": 1,
+					"fail": 0
+				},
+				"User deletion outcome is correctly shown": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				21
+			],
+			"allTests": [
+				{
+					"Responds with HTTP 200 or 404": true,
+					"User deletion outcome is correctly shown": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 83,
+	"collection": {
+		"requests": [
+			{
+				"id": "68b3bfaf-a322-464b-bac2-60614f24916b",
+				"method": "POST"
+			},
+			{
+				"id": "663984da-0660-4f41-9d3f-2ff24306125e",
+				"method": "GET"
+			},
+			{
+				"id": "e9dd30f9-76bb-487c-a57d-698f62d3b781",
+				"method": "GET"
+			},
+			{
+				"id": "bed0cae1-e60a-46a1-964a-f8f7d6d20082",
+				"method": "GET"
+			},
+			{
+				"id": "57033431-5725-43c3-8daa-3411545bdde3",
+				"method": "GET"
+			},
+			{
+				"id": "b46798c6-74cf-4724-9008-6a6a61f18df9",
+				"method": "GET"
+			},
+			{
+				"id": "6f54dc0c-0429-4b91-b815-7fa2d97b36d0",
+				"method": "POST"
+			},
+			{
+				"id": "e11cc459-8ba9-44d2-a120-10b1daa39614",
+				"method": "GET"
+			},
+			{
+				"id": "1e50845d-1a37-412d-818f-2d1e6913e1de",
+				"method": "GET"
+			},
+			{
+				"id": "d3e561d1-bb9e-4937-9c70-e31b69b1502d",
+				"method": "GET"
+			},
+			{
+				"id": "c70fc7fa-589d-40b3-bc3f-8421fb6699fd",
+				"method": "POST"
+			},
+			{
+				"id": "db555394-e27d-4b24-b56c-aa243e107561",
+				"method": "POST"
+			},
+			{
+				"id": "1fe4d01c-e84b-4d10-8923-51f9eb69ac03",
+				"method": "POST"
+			}
+		]
+	}
+}

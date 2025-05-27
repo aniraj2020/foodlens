@@ -1,0 +1,196 @@
+
+> foodlens-app@1.0.0 test
+> mocha --reporter spec
+
+
+
+  FoodLens API - Automated Testing of Public GET Endpoints
+
+Starting FoodLens API Tests...
+
+
+Logging in before protected route tests...
+MongoDB connected
+Login cookie: [
+  'connect.sid=s%3Asxk3r8Uy3-17p2iCpHAeGP6dA6ypGMFw.V%2BmzQLYVnxCGBL5xUH6KbzKQ%2F10YbwdpRMg7qYb84r0; Path=/; HttpOnly; SameSite=Lax'
+]
+    1. Food Insecurity Types Endpoint
+
+Testing /api/type...
+Response from /api/type: {
+  labels: [
+    'Worried food would run out',
+    'Insecurity (multiple concerns)',
+    'Skipped meals',
+    'Ran out of food',
+    'Insecurity (multiple concerns + relief)',
+    'Accessed food relief services'
+  ],
+  values: [ 7076, 5928, 5584, 4611, 3563, 990 ]
+}
+      ✔ GET /api/type should return labels and values arrays
+    2. Demographics Visualization Endpoint
+
+Testing /api/demographics?year=2023...
+Response from /api/demographics: {
+  labels: [
+    'City of Melbourne',
+    'Female',
+    'Male',
+    '25-34 years',
+    '18-24 years',
+    'Melbourne 3000',
+    'Carlton 3053',
+    'North Melbourne 3051 / West Melbourne 3003',
+    '35-44 years',
+    'South Yarra 3141 / Melbourne/St Kilda Road 3004',
+    'South Wharf / Southbank 3006',
+    'Docklands 3008',
+    '45-54 years',
+    'Parkville 3052',
+    'Kensington / Flemington 3031',
+    'East Melbourne 3002',
+    '55-64 years',
+    '65+ years'
+  ],
+  values: [
+    1285, 752, 504, 435, 412,
+     381, 255, 210, 183, 139,
+      93,  81,  71,  64,  48,
+      40,  37,  26
+  ]
+}
+      ✔ GET /api/demographics?year=2023 should return non-empty labels and values arrays
+    3. Combined Trends Endpoint
+
+Testing /api/trends/values?category=gender...
+Distinct values for "gender" → 2
+Response from /api/trends/values: { values: [ 'Female', 'Male' ] }
+      ✔ GET /api/trends/values?category=gender should return a non-empty values array
+    4. Prediction Endpoint
+
+Testing /api/predict?category=gender&group=Female...
+Response from /api/predict: {
+  years: [
+    2018, 2019, 2020,
+    2021, 2022, 2023,
+    2024, 2025, 2026
+  ],
+  actual: [ 574, 488, 621, 750, 867, 752 ],
+  predicted: [ 891, 953, 1014 ],
+  splitIndex: 6
+}
+      ✔ GET /api/predict?category=gender&group=Female should return prediction structure
+    5. Insights Endpoint
+
+Testing /api/insight?category=gender&group=Female...
+Response from /api/insight: {
+  years: [ 2018, 2019, 2020, 2021, 2022, 2023 ],
+  datasets: [
+    {
+      label: 'Accessed food relief services',
+      data: [Array],
+      borderColor: '#42a5f5',
+      fill: false,
+      tension: 0.3,
+      pointRadius: 4,
+      borderWidth: 2
+    },
+    {
+      label: 'Insecurity (multiple concerns + relief)',
+      data: [Array],
+      borderColor: '#66bb6a',
+      fill: false,
+      tension: 0.3,
+      pointRadius: 4,
+      borderWidth: 2
+    },
+    {
+      label: 'Insecurity (multiple concerns)',
+      data: [Array],
+      borderColor: '#ef5350',
+      fill: false,
+      tension: 0.3,
+      pointRadius: 4,
+      borderWidth: 2
+    },
+    {
+      label: 'Ran out of food',
+      data: [Array],
+      borderColor: '#ffa726',
+      fill: false,
+      tension: 0.3,
+      pointRadius: 4,
+      borderWidth: 2
+    },
+    {
+      label: 'Skipped meals',
+      data: [Array],
+      borderColor: '#ab47bc',
+      fill: false,
+      tension: 0.3,
+      pointRadius: 4,
+      borderWidth: 2
+    },
+    {
+      label: 'Worried food would run out',
+      data: [Array],
+      borderColor: '#000000',
+      fill: false,
+      tension: 0.3,
+      pointRadius: 4,
+      borderWidth: 2
+    }
+  ]
+}
+      ✔ GET /api/insight?category=gender&group=Female should return insight data
+    6. Save Filters Endpoint (Insight - Gender: Female)
+
+Testing /api/user/filters [POST]...
+Resolved userId: new ObjectId('6824d28dd8aaa76aa2a729a0')
+Before: {
+  insight: { category: 'gender', group: 'Female' },
+  combined: { category: 'age_group', values: [ '25-34 years' ] }
+}
+Saved filters for: adminuser
+After save: {
+  insight: { category: 'gender', group: 'Female' },
+  combined: { category: 'age_group', values: [ '25-34 years' ] }
+}
+Response from POST /api/user/filters: { message: 'Filters saved.' }
+      ✔ POST /api/user/filters should save filters and return success message
+    7. Get Saved Filters Endpoint (Insight)
+
+Testing /api/user/filters?chart=insight [GET]...
+Response from GET /api/user/filters: { filters: { category: 'gender', group: 'Female' } }
+      ✔ GET /api/user/filters?chart=insight should return saved filter data
+    8. Admin CSV Export
+
+Testing /admin/export-csv [GET]...
+CSV Export Response:
+ Username,Role,Last Chart,Filters,Last Active At,Created At
+adminuser,admin,insight,"{""category"":""gender"",""group"":""Female""}","5/27/2025, 3:15:23 PM",
+testuser,user,demographics,"{""category"":" ...
+      ✔ GET /admin/export-csv should return a CSV file
+    9. Admin Toggle Role
+
+Testing /admin/toggle-role [POST]...
+Toggle Role Response: { message: 'Role Updated', newRole: 'admin' }
+      ✔ POST /admin/toggle-role should change a user's role
+    10. Admin Clear User History
+
+Testing /admin/clear-user-history [POST]...
+Clear History redirected to: /admin-panel?
+      ✔ POST /admin/clear-history should redirect after clearing history
+    11. Admin Delete User
+
+Testing /admin/delete-user [POST]...
+Delete User redirected to: /admin-panel?
+      ✔ POST /admin/delete-user should redirect after deleting user
+
+***** All tests executed. *****
+
+
+
+  11 passing (171ms)
+
