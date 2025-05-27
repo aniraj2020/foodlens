@@ -5,13 +5,16 @@
   <title>Demographic Visualization</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <!-- Materialize & Chart.js -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body class="container center-align">
 
-  <h4>Food Insecurity by Demographic Group</h4>
+  <h4 style="margin-top: 2rem;">Food Insecurity by Demographic Group</h4>
 
   <!-- Year Dropdown -->
   <div class="row">
@@ -30,19 +33,23 @@
   </div>
 
   <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
-    This chart displays the number of people affected by food insecurity, by various respondent groups. Select a year to explore changes over time.
+    This chart displays the number of people affected by food insecurity, by various respondent groups.
+    Select a year to explore changes over time.
   </p>
 
-
   <!-- Chart -->
-  <div class="chart-container">
+  <div class="chart-container" style="max-width: 900px; margin: 0 auto;">
     <canvas id="barChart"></canvas>
   </div>
 
   <!-- Reset and Back Buttons -->
-  <div class="center-buttons">
-    <a href="/" class="btn blue">Back to Home</a>
-    <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">Reset</button>
+  <div class="row center-align" style="margin-top: 2rem; margin-bottom: 4rem;">
+    <a href="/dashboard" class="btn blue">
+      <i class="material-icons left">home</i>Back to Dashboard
+    </a>
+    <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">
+      <i class="material-icons left">refresh</i>Reset
+    </button>
   </div>
 
   <!-- Scripts -->
@@ -53,6 +60,8 @@
     });
   </script>
   <script src="/script_demographics.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+
 
 </body>
 </html>

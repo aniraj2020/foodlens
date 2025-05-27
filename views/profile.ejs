@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <title>Your Profile - FoodLens</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Materialize and Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
@@ -25,18 +28,20 @@
   </div>
 
   <!-- Profile Card -->
-  <div class="info-section" style="max-width: 600px; margin: 0 auto;">
+  <div class="info-section" style="max-width: 600px; margin: 90px auto 0 auto;">
     <h4><i class="material-icons left">account_circle</i> Profile Details</h4>
     <p class="profile-label"><strong>Username:</strong> <%= user.username %></p>
     <p class="profile-label"><strong>Role:</strong> <%= user.role %></p>
 
-
     <div class="center-align" style="margin-top: 2rem;">
-      <a href="/" class="btn blue">Back to Home</a>
-      <a href="/logout" class="btn red">Logout</a>
+      <a href="/dashboard" class="btn blue">
+        <i class="material-icons left">home</i>Back to Dashboard
+      </a>
     </div>
   </div>
 
+
+  <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

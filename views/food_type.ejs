@@ -1,14 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>FoodLens Dashboard</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>FoodLens Dashboard - Types</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Materialize & Chart.js -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body class="container center-align">
 
-  <h4 class="center-align" style="margin-top: 2rem;">Food Insecurity Types Distribution</h4>
+  <h4 style="margin-top: 2rem;">Food Insecurity Types Distribution</h4>
 
   <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
     This chart shows the distribution of reported food insecurity types in Melbourne.
@@ -18,10 +24,15 @@
     <canvas id="pieChart"></canvas>
   </div>
 
-  <div class="center-btn">
-    <a href="/" class="btn blue">Back to Home</a>
+  <div class="row center-align" style="margin-top: 2rem; margin-bottom: 4rem;">
+    <a href="/dashboard" class="btn blue">
+      <i class="material-icons left">home</i>Back to Dashboard
+    </a>
   </div>
 
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="/script_type.js"></script>
+
 </body>
 </html>
