@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const socket = io();
   const categorySelect = document.getElementById("categorySelect");
   const checkboxContainer = document.getElementById("checkboxes");
   const chartInstruction = document.getElementById("chartInstruction");
@@ -9,7 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
   let savedValues = [];
 
   M.FormSelect.init(categorySelect);
-
   initPage();
 
   async function initPage() {
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
         categorySelect.value = savedCategory;
         M.FormSelect.init(categorySelect);
         await loadCheckboxes(savedCategory, savedValues);
-        renderChart(); // render after setting everything
+        renderChart();
       }
     } catch (err) {
       console.error("Error loading saved filters:", err);
@@ -43,7 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // "Select All" checkbox
     const selectAllLabel = document.createElement("label");
     selectAllLabel.innerHTML = `
       <input type="checkbox" id="selectAll" />
@@ -105,7 +104,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // Save filters + activity only when rendering valid chart
       await fetch("/api/user/filters", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -138,7 +136,13 @@ document.addEventListener("DOMContentLoaded", function () {
           layout: { padding: { top: 10, bottom: 30 } }
         }
       });
+
       chartInstruction.textContent = "";
+
+      if (window.location.pathname !== "/admin-panel") {
+        socket.emit("pageVisited", { page: window.location.pathname });
+      }
+
     } catch (err) {
       console.error("Chart fetch/render error:", err);
       chartInstruction.innerHTML = `<span style="color: red;">Error loading chart data.</span>`;
@@ -164,6 +168,10 @@ document.addEventListener("DOMContentLoaded", function () {
       chart.destroy();
       chart = null;
     }
-    await loadCheckboxes(selectedCat); // no preselect
+    await loadCheckboxes(selectedCat);
   });
+
+  if (window.location.pathname !== "/admin-panel") {
+    socket.emit("pageVisited", { page: window.location.pathname });
+  }
 });

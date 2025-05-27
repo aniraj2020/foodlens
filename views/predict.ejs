@@ -1,52 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Prediction & Future Trends</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="container center-align">
+<body class="home-body">
 
-  <h5>Food Insecurity Prediction (2024–2026)</h5>
-  <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
-    This chart visualizes actual food insecurity data (2018–2023) for the selected group and forecasts future trends from 2024 to 2026 using regression-based modeling. The prediction helps identify potential increases or improvements in food insecurity within specific demographics.
-  </p>
-
-  <!-- Dropdowns -->
-  <div class="row">
-    <div class="input-field col s6">
-      <select id="categorySelect">
-        <option value="" disabled selected>Select Demographic Category</option>
-        <option value="gender">Gender</option>
-        <option value="age_group">Age</option>
-        <option value="suburb_group">Suburb</option>
-      </select>
-      <label>Select Category</label>
+  <!-- App Bar -->
+  <div class="app-bar">
+    <div class="app-bar-left">
+      <i class="material-icons left">code</i>
+      <a href="https://github.com/aniraj2020/FoodLens" target="_blank">GitHub Repo</a>
     </div>
-
-    <div class="input-field col s6">
-      <select id="groupSelect">
-        <option value="" disabled selected>Select Group</option>
-      </select>
-      <label>Select Group</label>
+    <div class="app-bar-center">
+      Welcome to FoodLens, <%= user.username %>!
+    </div>
+    <div class="app-bar-right">
+      <a href="/logout" class="btn red">Logout</a>
     </div>
   </div>
 
-  <!-- Chart -->
-  <div class="chart-container">
-    <canvas id="predictChart"></canvas>
-  </div>
+  <!-- Page Content -->
+  <div class="container center-align">
+    <h5 style="margin-top: 2rem;">Food Insecurity Prediction (2024–2026)</h5>
+    <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
+      This chart visualizes actual food insecurity data (2018–2023) for the selected group and forecasts future trends from 2024 to 2026 using regression-based modeling.
+    </p>
 
-  <!-- Buttons -->
-  <div class="center-buttons">
-    <a href="/" class="btn blue">Back to Home</a>
-    <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">Reset</button>
+    <!-- Dropdowns -->
+    <div class="row">
+      <div class="input-field col s6">
+        <select id="categorySelect">
+          <option value="" disabled selected>Select Demographic Category</option>
+          <option value="gender">Gender</option>
+          <option value="age_group">Age</option>
+          <option value="suburb_group">Suburb</option>
+        </select>
+        <label>Select Demographic Category</label>
+      </div>
+
+      <div class="input-field col s6">
+        <select id="groupSelect">
+          <option value="" disabled selected>Select Group</option>
+        </select>
+        <label>Select Group</label>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="chart-container">
+      <canvas id="predictChart"></canvas>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div style="margin-top: 2rem;">
+      <a href="/" class="btn blue"><i class="material-icons left">home</i>Back to Home</a>
+      <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">
+        <i class="material-icons left">refresh</i>Reset
+      </button>
+    </div>
   </div>
 
   <!-- Scripts -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/socket_init.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      M.FormSelect.init(document.querySelectorAll('select'));
+    });
+  </script>
   <script src="/script_predict.js"></script>
 </body>
 </html>

@@ -1,18 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Access Denied</title>
+  <title>Access Denied - FoodLens</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
 </head>
-<body class="container center-align full-page-center">
 
-  <div class="alert" style="max-width: 500px; text-align: center;">
-    <h5 class="red-text text-darken-2">Access Denied</h5>
-    <p>Admins only. Please <a href="/login">log in</a> with an admin account.</p>
+<body class="home-body">
+
+  <!-- App Bar -->
+  <div class="app-bar">
+    <div class="app-bar-left">
+      <i class="material-icons left">code</i>
+      <a href="https://github.com/aniraj2020/FoodLens" target="_blank">GitHub Repo</a>
+    </div>
+    <div class="app-bar-center">
+      Access Denied
+    </div>
+    <div class="app-bar-right">
+      <a href="/login" class="btn red">Login</a>
+    </div>
   </div>
 
-  <a href="/login" class="btn red btn-wide">Go to Login</a>
+  <!-- Main Alert Section -->
+  <div class="center-align" style="max-width: 500px; margin: 4rem auto;">
+    <div class="card-panel red lighten-5 z-depth-1">
+      <h5 class="red-text text-darken-3"><i class="material-icons left">block</i> Access Denied</h5>
+      <p>Admins only. Please <a href="/login">log in</a> with an admin account.</p>
+    </div>
+    <a href="/login" class="btn red"><i class="material-icons left">lock</i>Go to Login</a>
+  </div>
 
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
