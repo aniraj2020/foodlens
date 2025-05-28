@@ -37,6 +37,7 @@ const showAllUsers = async (req, res) => {
       .lean();
 
     res.render("admin_users", {
+      title: "Admin Panel – User Management",
       user: req.user,
       users,
       role,
@@ -45,7 +46,8 @@ const showAllUsers = async (req, res) => {
       totalPages,
       toast,
       usageStats,
-      recentLogs
+      recentLogs,
+      // layout: false
     });
 
   } catch (err) {

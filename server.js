@@ -20,7 +20,13 @@ const predictRoutes = require("./routes/predict");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const userRoutes = require("./routes/user");
-const { ensureAuthenticated } = require("./middleware/auth");
+
+const { ensureAuthenticated, ensureAdmin } = require("./middleware/auth");
+const { showAllUsers } = require("./controllers/adminController");
+
+// SOCKET.IO
+const activeUsers = new Set();
+const userSocketMap = new Map();
 
 dotenv.config();
 const app = express();
@@ -52,6 +58,7 @@ app.use(expressLayouts);
 app.set("view engine", "ejs");
 app.set("layout", "layout");
 app.set("io", io);
+app.set("userSocketMap", userSocketMap);
 
 // Normalize Page Function
 const normalizePageName = (raw) => {
@@ -103,9 +110,6 @@ app.get("/register", (req, res) => {
 // AUTH ROUTES
 app.get("/dashboard", ensureAuthenticated, async (req, res) => {
   try {
-    const toast = req.session.toastMessage || null;
-    delete req.session.toastMessage;
-
     const userFromDB = await User.findById(req.user._id).lean();
 
     res.render("home", {
@@ -118,7 +122,6 @@ app.get("/dashboard", ensureAuthenticated, async (req, res) => {
         lastFilters: userFromDB.lastFilters,
         lastActivity: userFromDB.lastActivity
       },
-      welcomeMessage: toast
     });
   } catch (err) {
     console.error("Error loading dashboard:", err);
@@ -155,6 +158,17 @@ app.get("/profile", ensureAuthenticated, (req, res) => {
   res.render("profile", { title: "Profile", user: req.user, layout: false });
 });
 
+app.get("/admin-panel", ensureAdmin, async (req, res, next) => {
+  // keeping layout off this route
+  const originalRender = res.render;
+  res.render = function (view, options = {}, callback) {
+    options.layout = false;
+    originalRender.call(this, view, options, callback);
+  };
+  showAllUsers(req, res, next);
+});
+
+
 // API ROUTES
 app.use("/", homeRoutes);
 app.use("/api/type", foodTypeRoutes);
@@ -166,14 +180,14 @@ app.use("/api/user", userRoutes);
 app.use("/", authRoutes);
 app.use("/", adminRoutes);
 
-// SOCKET.IO
-const activeUsers = new Set();
-
 io.on("connection", (socket) => {
   const userId = socket.handshake?.session?.passport?.user;
   if (userId) {
     socket.userId = userId;
     activeUsers.add(userId);
+    userSocketMap.set(userId, socket.id);
+    // console.log("Mapped user:", userId, "to socket:", socket.id); //debug
+
     io.emit("activeUserCount", activeUsers.size);
   }
 
@@ -215,6 +229,7 @@ io.on("connection", (socket) => {
     );
     if (!stillConnected && socket.userId) {
       activeUsers.delete(socket.userId);
+      userSocketMap.delete(socket.userId); 
       io.emit("activeUserCount", activeUsers.size);
     }
   });

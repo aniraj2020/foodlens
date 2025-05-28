@@ -29,10 +29,8 @@
 
   <!-- Page Content -->
   <div class="container center-align">
-    <h5 style="margin-top: 2rem;">Combined Demographic Trends Over Time</h5>
-    <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
-      This chart shows how food insecurity has affected different demographic groups over the years. Select a group to compare trends.
-    </p>
+    <!-- Title -->
+    <h4 style="margin-top: 2rem; margin-bottom: 1rem; padding-top: 80px;">Combined Demographic Trends Over Time</h4>
 
     <!-- Dropdown -->
     <div class="row">
@@ -58,6 +56,11 @@
       <canvas id="trendChart"></canvas>
     </div>
 
+    <!-- Description -->
+    <p class="grey-text text-darken-2" style="margin-bottom: 2rem; font-size: 1.1rem;">
+      This chart shows how food insecurity has affected different demographic groups over the years. Select a group to compare trends.
+    </p>
+
     <!-- Navigation Buttons -->
     <div class="row center-align" style="margin-top: 2rem; margin-bottom: 4rem;">
       <a href="/dashboard" class="btn blue">
@@ -77,7 +80,8 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      M.FormSelect.init(document.querySelectorAll('select'));
+      const elems = document.querySelectorAll('select');
+      M.FormSelect.init(elems);
     });
   </script>
 </body>

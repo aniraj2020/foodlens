@@ -28,17 +28,17 @@
   </div>
 
   <!-- Profile Card -->
-  <div class="info-section center-align" style="max-width: 600px; margin: 3rem auto;">
+  <div class="info-section center-align" style="max-width: 600px; margin: 10rem auto;">
     <h4><i class="material-icons left">account_circle</i> Profile</h4>
     <div class="card-panel z-depth-1">
       <p><strong>Username:</strong> <%= user.username %></p>
       <p><strong>Role:</strong> <%= user.role %></p>
       <p><strong>Joined On:</strong> 
-        <%= new Date(user.createdAt).toLocaleString("en-AU", { 
+        <%= user.CreatedAt ? new Date(user.createdAt).toLocaleString("en-AU", { 
               day: '2-digit', 
               month: 'long', 
               year: 'numeric' 
-        }) %>
+        }) : "N/A" %>
       </p>
     </div>
 

@@ -45,6 +45,12 @@ document.addEventListener("DOMContentLoaded", async () => {
               font: { size: 16 },
               padding: 12
             }
+          },
+          title: {
+            display: true,
+            text: "Food Insecurity Types in Melbourne",
+            font: { size: 30 },
+            padding: { top: 10, bottom: 20 }
           }
         }
       }

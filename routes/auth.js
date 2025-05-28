@@ -36,7 +36,7 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// ✅ Login + Register page routes: do NOT pass hideHeader!
+// Login + Register page routes: do NOT pass hideHeader!
 router.get("/register", showRegisterPage);
 router.post("/register", registerUser);
 

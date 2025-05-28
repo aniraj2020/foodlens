@@ -30,8 +30,15 @@
   </div>
 
   <!-- Main Content -->
-  <div class="container center-align">
-    <h4 style="margin-top: 2rem;">Food Insecurity by Demographic Group</h4>
+  <div class="container center-align" style="margin-top: 2.5rem;">
+    <!-- Title -->
+    <h4 style="margin-bottom: 1.5rem; padding-top: 80px;">Food Insecurity by Demographic Group</h4>
+
+    <!-- Description -->
+    <p class="grey-text text-darken-1" style="margin-top: 2rem; font-size: 1.1rem;">
+      This chart displays the number of people affected by food insecurity, by various respondent groups.
+      Select a year to explore changes over time.
+    </p>
 
     <!-- Year Dropdown -->
     <div class="row">
@@ -45,18 +52,12 @@
           <option value="2019">2019</option>
           <option value="2018">2018</option>
         </select>
-        <label>Select Year</label>
+        <label for="yearSelect">Select Year</label>
       </div>
     </div>
 
-    <!-- Description -->
-    <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
-      This chart displays the number of people affected by food insecurity, by various respondent groups.
-      Select a year to explore changes over time.
-    </p>
-
     <!-- Chart -->
-    <div class="chart-container" style="max-width: 900px; margin: 0 auto;">
+    <div class="chart-container" style="max-width: 900px; margin: 2rem auto 0;">
       <canvas id="barChart"></canvas>
     </div>
 
@@ -74,8 +75,11 @@
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      M.FormSelect.init(document.querySelectorAll('select'));
+    document.addEventListener('DOMContentLoaded', function () {
+      const selects = document.querySelectorAll('select');
+      if (selects.length) {
+        M.FormSelect.init(selects);
+      }
     });
   </script>
   <script src="/script_demographics.js"></script>

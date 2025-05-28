@@ -1,7 +1,6 @@
-/* ---------------------------------------------------
-   Base Styling for All Pages
------------------------------------------------------ */
-
+/* ===================================================
+   Base Styling
+===================================================== */
 body {
   overflow-x: hidden;
   margin: 0;
@@ -21,10 +20,10 @@ h1, h2, h3, h4, h5 {
   text-align: center;
 }
 
-/* ---------------------------------------------------
-   Dashboard Layout with Sidebar
------------------------------------------------------ */
 
+/* ===================================================
+   Sidebar & Layout
+===================================================== */
 .dashboard-container {
   display: flex;
   min-height: 100vh;
@@ -64,23 +63,22 @@ h1, h2, h3, h4, h5 {
 }
 
 .nav-item {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   width: 100%;
   padding: 1rem 1.5rem;
   color: #ffffff;
   text-decoration: none;
-  transition: all 0.3s ease;
-  border: none;
   background: none;
+  border: none;
   text-align: left;
   font-size: 0.95rem;
   font-weight: 500;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  transition: all 0.3s ease;
 }
 
 .nav-item:hover {
@@ -95,66 +93,47 @@ h1, h2, h3, h4, h5 {
   border-right: 4px solid #42a5f5;
 }
 
-.nav-item.green { background-color: #2e7d32; }
-.nav-item.green:hover { background-color: #388e3c; }
-
-.nav-item.blue { background-color: #1565c0; }
-.nav-item.blue:hover { background-color: #1976d2; }
-
-.nav-item.purple { background-color: #6a1b9a; }
-.nav-item.purple:hover { background-color: #7b1fa2; }
-
-.nav-item.orange { background-color: #ef6c00; }
-.nav-item.orange:hover { background-color: #f57c00; }
-
-.nav-item.grey { background-color: #424242; }
-.nav-item.grey:hover { background-color: #616161; }
-
-.nav-item.red { background-color: #c62828; }
-.nav-item.red:hover { background-color: #d32f2f; }
-
 .nav-item i {
   font-size: 1.1rem;
   width: 20px;
   text-align: center;
 }
 
+/* Sidebar Button Colors */
+.nav-item.green    { background-color: #2e7d32; }
+.nav-item.green:hover  { background-color: #388e3c; }
+
+.nav-item.blue     { background-color: #1565c0; }
+.nav-item.blue:hover   { background-color: #1976d2; }
+
+.nav-item.purple   { background-color: #6a1b9a; }
+.nav-item.purple:hover { background-color: #7b1fa2; }
+
+.nav-item.orange   { background-color: #ef6c00; }
+.nav-item.orange:hover { background-color: #f57c00; }
+
+.nav-item.grey     { background-color: #424242; }
+.nav-item.grey:hover   { background-color: #616161; }
+
+.nav-item.red      { background-color: #c62828; }
+.nav-item.red:hover    { background-color: #d32f2f; }
+
 .main-content {
   margin-left: 320px;
-  padding: 2rem 3rem;
+  padding: 2rem 1rem;
   width: calc(100% - 320px);
-  max-width: none;         
   box-sizing: border-box;
+  overflow-x: hidden;
+  padding-top: 90px; /* Below app-bar */
 }
 
-/* ---------------------------------------------------
-   Chart Styles
------------------------------------------------------ */
 
-#predictChart,
-#insightChart,
-#trendChart,
-#barChart{
-  width: 100% !important;
-  max-width: 1000px;
-  height: 500px !important;
-  margin: 0 auto;
-}
-
-#pieChart{
-  width: 100% !important;
-  max-width: 800px;
-  height: 800px !important;
-  margin: 0 auto;
-}
-
-/* ---------------------------------------------------
+/* ===================================================
    App Bar / Header
------------------------------------------------------ */
-
+===================================================== */
 .app-bar {
   position: fixed;
-  left: 0px;
+  left: 0;
   top: 0;
   right: 0;
   height: 70px;
@@ -166,12 +145,12 @@ h1, h2, h3, h4, h5 {
   padding: 0 3rem;
   font-size: 1.3rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
   z-index: 999;
+  box-sizing: border-box;
 }
 
 .app-bar.with-sidebar {
-  left: 320px; 
+  left: 320px;
 }
 
 .app-bar a {
@@ -197,15 +176,22 @@ h1, h2, h3, h4, h5 {
   gap: 0.5rem;
 }
 
-/* Adjust main content to be below fixed app-bar */
-.main-content {
-  padding-top: 90px;
+/* ===================================================
+   Sticky Footer Layout
+===================================================== */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* ---------------------------------------------------
-   Homepage Layout - UPDATED FOR WIDER CONTENT
------------------------------------------------------ */
+main {
+  flex: 1;
+}
 
+/* ===================================================
+   Homepage Layout
+===================================================== */
 .home-body {
   width: 100%;
   max-width: none;
@@ -215,71 +201,61 @@ h1, h2, h3, h4, h5 {
 }
 
 .home-layout {
-  padding-top: 1rem;
-  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  min-height: 100vh;
+  width: 100%;
 }
 
 .home-main {
   display: flex;
-  gap: 4rem;
-  align-items: flex-start;
+  flex-wrap: wrap;
   justify-content: space-between;
-  width: 100%;
-  margin: 0;
-  padding: 6rem 1rem;
+  gap: 2rem;
+  padding: 4rem 2rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.left-main,
+.right-info {
+  flex: 1 1 0;
+  min-width: 50%;
   box-sizing: border-box;
 }
 
 .left-main {
-  flex: none;
-  min-width: 580px;
-  max-width: 660px;
-  margin-right: auto; 
+  max-width: 850px;
+  margin-right: auto;
 }
 
 .right-info {
-  flex: 1;
-  min-width: 500px;
-  max-width: 660px;
-  margin-left: auto; 
+  max-width: 850px;
+  margin-left: auto;
 }
 
+
+/* ===================================================
+   Intro Section
+===================================================== */
 .left-hero h5 {
-  font-size: 2.4rem;
-}
-
-.left-hero p,
-.info-section p,
-.info-section ul,
-.info-section li {
-  font-size: 1.3rem;
-  line-height: 1.9;
-}
-
-/* ---------------------------------------------------
-   Intro Section (Left Top)
------------------------------------------------------ */
-
-.left-hero h5 {
-  font-size: 3.5rem;
+  font-size: 3rem;
   margin-bottom: 1rem;
   color: #2e7d32;
 }
 
 .left-hero p {
   text-align: justify;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   line-height: 1.6;
   color: #444;
 }
 
-/* ---------------------------------------------------
-   Activity Card
------------------------------------------------------ */
 
+/* ===================================================
+   Activity Card
+===================================================== */
 .activity-card {
   padding: 1.5rem;
   border-radius: 10px;
@@ -301,16 +277,15 @@ h1, h2, h3, h4, h5 {
   margin-top: 1rem;
 }
 
-/* ---------------------------------------------------
-   Dashboard Grid Buttons (for homepage)
------------------------------------------------------ */
 
+/* ===================================================
+   Dashboard Buttons
+===================================================== */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   width: 100%;
-  max-width: 100%;
 }
 
 .dashboard-grid a.btn {
@@ -330,23 +305,17 @@ h1, h2, h3, h4, h5 {
   filter: brightness(1.08);
 }
 
-.material-icons.left {
-  margin-right: 0.5rem;
-}
 
-/* ---------------------------------------------------
-   Informational Section
------------------------------------------------------ */
-
+/* ===================================================
+   Info Section
+===================================================== */
 .info-section {
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
   padding: 2.5rem;
-  width: 100%;
   color: #333;
   line-height: 1.8;
-  transition: all 0.3s ease;
   height: fit-content;
 }
 
@@ -363,14 +332,15 @@ h1, h2, h3, h4, h5 {
   margin-bottom: 1rem;
 }
 
-.info-section p {
-  text-align: justify;
+.info-section p,
+.info-section ul,
+.info-section li {
   font-size: 1.1rem;
+  text-align: justify;
   line-height: 1.6;
 }
 
 .info-section ul {
-  font-size: 1.1rem;
   margin-top: 1rem;
   margin-left: 1.5rem;
   list-style-type: disc;
@@ -378,13 +348,33 @@ h1, h2, h3, h4, h5 {
 
 .info-section ul li {
   margin-bottom: 0.5rem;
-  line-height: 1.5;
 }
 
- /* ---------------------------------------------------
-   Filters & Form Elements 
------------------------------------------------------ */
 
+/* ===================================================
+   Chart Styles
+===================================================== */
+#predictChart,
+#insightChart,
+#trendChart,
+#barChart {
+  width: 100% !important;
+  max-width: 1000px;
+  height: 500px !important;
+  margin: 0 auto;
+}
+
+#pieChart {
+  width: 100% !important;
+  max-width: 700px;
+  height: 700px !important;
+  margin: 0 auto;
+}
+
+
+/* ===================================================
+   Filters & Form Controls
+===================================================== */
 #checkboxes {
   display: flex;
   flex-wrap: wrap;
@@ -397,13 +387,13 @@ h1, h2, h3, h4, h5 {
   background-color: #e8f5e9;
   padding: 8px 14px;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
   font-weight: 500;
   color: #2e7d32;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  transition: all 0.2s ease;
   cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
 }
 
 #checkboxes label:hover {
@@ -414,10 +404,10 @@ h1, h2, h3, h4, h5 {
   margin-right: 6px;
 }
 
-/* ---------------------------------------------------
-   Admin Panel Enhancements
------------------------------------------------------ */
 
+/* ===================================================
+   Admin Panel
+===================================================== */
 .user-card {
   padding: 1.5rem;
   margin-bottom: 1.5rem;
@@ -447,10 +437,10 @@ h1, h2, h3, h4, h5 {
   color: white;
 }
 
-/* ---------------------------------------------------
-   Buttons
------------------------------------------------------ */
 
+/* ===================================================
+   Buttons
+===================================================== */
 .btn, .btn-small {
   border-radius: 8px;
   text-transform: uppercase;
@@ -472,14 +462,13 @@ h1, h2, h3, h4, h5 {
   outline-offset: 2px;
 }
 
-/* ---------------------------------------------------
-   Utility
------------------------------------------------------ */
 
+/* ===================================================
+   Utility Classes
+===================================================== */
 hr.section-divider {
   border: none;
   border-top: 2px solid #ddd;
-  width: 100%;
   max-width: 900px;
   margin: 2rem auto 3rem;
 }
@@ -489,15 +478,15 @@ hr.section-divider {
   margin-bottom: 0.8rem;
 }
 
-/* ---------------------------------------------------
-   Responsive Enhancements
------------------------------------------------------ */
 
+/* ===================================================
+   Responsive Styling
+===================================================== */
 @media screen and (max-width: 1200px) {
   .home-main {
     gap: 1.5rem;
   }
-  
+
   .right-info {
     min-width: 300px;
     max-width: 400px;
@@ -509,16 +498,16 @@ hr.section-divider {
     transform: translateX(-100%);
     transition: transform 0.3s ease;
   }
-  
+
   .sidebar.open {
     transform: translateX(0);
   }
-  
+
   .main-content {
     margin-left: 0;
     width: 100%;
   }
-  
+
   .mobile-menu-btn {
     display: block;
     position: fixed;
@@ -565,17 +554,13 @@ hr.section-divider {
     width: 90%;
     margin: 2rem auto;
   }
-  
-  .main-content {
-    padding: 1rem;
-  }
-  
+
+  .main-content,
   .home-main {
     padding: 1rem;
   }
 }
 
-/* Mobile menu button (hidden by default) */
 .mobile-menu-btn {
   display: none;
 }

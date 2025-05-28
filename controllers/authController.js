@@ -23,8 +23,8 @@ const registerUser = async (req, res) => {
     const newUser = new User({ username, password });
     await newUser.save();
 
-    // ✅ Simple welcome toast message (will show after login)
-    req.session.toastMessage = `👋 Welcome ${newUser.username}`;
+    // Simple welcome toast message (will show after login)
+    req.session.toastMessage = `Welcome ${newUser.username}`;
     res.redirect("/login");
   } catch (err) {
     console.error("Registration error:", err.message);
@@ -46,11 +46,25 @@ const loginUser = (req, res, next) => {
     req.logIn(user, (err) => {
       if (err) return next(err);
 
-      // Toast message after login
-      req.session.toastMessage = `Welcome ${user.username}`;
+      // Emit welcome toast via Socket.IO if socket is connected
+      const io = req.app.get("io");
+      const userSocketMap = req.app.get("userSocketMap");
+      const userId = user._id.toString();
+      const socketId = userSocketMap.get(userId);
 
-      // Redirect to dashboard or home after login
-      return res.redirect("/dashboard"); 
+      // console.log("Toast socket ID:", socketId); //debug
+
+      setTimeout(() => {
+        const updatedSocketId = userSocketMap.get(userId);
+        if (updatedSocketId && io) {
+          io.to(updatedSocketId).emit("toast", `Welcome to FoodLens, ${user.username}!`);
+          console.log("Toast sent to socket:", updatedSocketId);
+        } else {
+          console.log("Toast skipped — socket not yet available.");
+        }
+      }, 600); // Wait 600ms for the client to connect
+
+      return res.redirect("/dashboard");
     });
   })(req, res, next);
 };
