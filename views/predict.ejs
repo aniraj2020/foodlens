@@ -4,14 +4,17 @@
   <meta charset="UTF-8" />
   <title>Prediction & Future Trends</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Materialize CSS and Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
+
+  <!-- Chart.js and Custom Styles -->
   <link rel="stylesheet" href="/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="home-body">
-
   <!-- App Bar -->
   <div class="app-bar">
     <div class="app-bar-left">
@@ -28,8 +31,10 @@
 
   <!-- Page Content -->
   <div class="container center-align">
-    <h5 style="margin-top: 2rem;">Food Insecurity Prediction (2024–2026)</h5>
-    <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
+    <h4 style="margin-top: 2rem; padding-top: 80px;">Food Insecurity Prediction (2024–2026)</h4>
+    
+    <!--Description-->
+    <p class="grey-text text-darken-2" style="margin-bottom: 2rem; font-size: 1.1rem;">
       This chart visualizes actual food insecurity data (2018–2023) for the selected group and forecasts future trends from 2024 to 2026 using regression-based modeling.
     </p>
 
@@ -54,13 +59,15 @@
     </div>
 
     <!-- Chart -->
-    <div class="chart-container">
+    <div class="chart-container" style="max-width: 900px; margin: 0 auto;">
       <canvas id="predictChart"></canvas>
     </div>
 
-    <!-- Navigation Buttons -->
-    <div style="margin-top: 2rem;">
-      <a href="/" class="btn blue"><i class="material-icons left">home</i>Back to Home</a>
+    <!-- Buttons -->
+    <div class="row center-align" style="margin-top: 2rem; margin-bottom: 3rem;">
+      <a href="/dashboard" class="btn blue">
+        <i class="material-icons left">home</i>Back to Dashboard
+      </a>
       <button id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">
         <i class="material-icons left">refresh</i>Reset
       </button>

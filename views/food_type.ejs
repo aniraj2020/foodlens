@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <title>Food Insecurity Types - FoodLens</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Materialize & Chart.js -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
@@ -12,7 +15,6 @@
 </head>
 
 <body class="home-body" data-welcome="<%= typeof welcomeMessage !== 'undefined' ? welcomeMessage : '' %>">
-
   <!-- App Bar -->
   <div class="app-bar">
     <div class="app-bar-left">
@@ -29,18 +31,21 @@
 
   <!-- Main Content -->
   <div class="container center-align">
-    <h4 style="margin-top: 2rem;">Food Insecurity Types Distribution</h4>
+    <!-- <h4 style="margin-top: 2rem;">Food Insecurity Types Distribution</h4> -->
 
-    <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
-      This chart shows the distribution of reported food insecurity types in Melbourne.
-    </p>
-
-    <div class="chart-container">
+    <div class="chart-container" style="max-width: 900px; margin: 0 auto; padding-top: 100px;">
       <canvas id="pieChart"></canvas>
     </div>
 
-    <div style="margin-top: 2rem;">
-      <a href="/" class="btn blue">Back to Home</a>
+    <!-- Description -->
+    <p class="grey-text text-darken-1" style="margin-top: 2rem; font-size: 1.1rem;">
+      This chart shows the distribution of reported food insecurity types in Melbourne.
+    </p>
+
+    <div class="row center-align" style="margin-top: 2rem; margin-bottom: 4rem;">
+      <a href="/dashboard" class="btn blue">
+        <i class="material-icons left">home</i>Back to Dashboard
+      </a>
     </div>
   </div>
 

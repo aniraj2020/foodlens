@@ -3,6 +3,6 @@ const router = express.Router();
 const { ensureAuthenticated } = require("../middleware/auth");
 const { showHomePage } = require("../controllers/homeController");
 
-router.get("/", ensureAuthenticated, showHomePage);
+router.get("/dashboard", ensureAuthenticated, showHomePage);
 
 module.exports = router;

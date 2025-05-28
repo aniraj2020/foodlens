@@ -29,22 +29,20 @@ passport.use(new LocalStrategy(async (username, password, done) => {
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(id).lean();
     done(null, user);
   } catch (err) {
     done(err);
   }
 });
 
-// Register Routes
+// Login + Register page routes: do NOT pass hideHeader!
 router.get("/register", showRegisterPage);
 router.post("/register", registerUser);
 
-// Login Routes
 router.get("/login", showLoginPage);
-router.post("/login", loginUser); // Use controller-based login logic
+router.post("/login", loginUser);
 
-// Logout
 router.get("/logout", logoutUser);
 
 module.exports = router;

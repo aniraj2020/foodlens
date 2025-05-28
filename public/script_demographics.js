@@ -111,6 +111,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 font: { size: 13 },
                 usePointStyle: true
               }
+            },
+            title: {
+              display: false,
+              text: "Food Insecurity by Demographic Group",
+              font: { size: 30 },
+              padding: { top: 10, bottom: 20 }
             }
           }
         }
@@ -132,4 +138,5 @@ document.addEventListener("DOMContentLoaded", function () {
   if (window.location.pathname !== "/admin-panel") {
     socket.emit("pageVisited", { page: window.location.pathname });
   }
+
 });

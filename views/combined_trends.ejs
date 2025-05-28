@@ -29,10 +29,8 @@
 
   <!-- Page Content -->
   <div class="container center-align">
-    <h5 style="margin-top: 2rem;">Combined Demographic Trends Over Time</h5>
-    <p class="grey-text text-darken-2" style="margin-bottom: 2rem;">
-      This chart shows how food insecurity has affected different demographic groups over the years. Select a group to compare trends.
-    </p>
+    <!-- Title -->
+    <h4 style="margin-top: 2rem; margin-bottom: 1rem; padding-top: 80px;">Combined Demographic Trends Over Time</h4>
 
     <!-- Dropdown -->
     <div class="row">
@@ -53,14 +51,21 @@
     <!-- Instruction Text -->
     <p id="chartInstruction" class="grey-text text-darken-2"></p>
 
-    <!-- Chart -->
-    <div class="chart-container">
+    <!-- Chart Container -->
+    <div class="chart-container" style="max-width: 900px; margin: 0 auto;">
       <canvas id="trendChart"></canvas>
     </div>
 
+    <!-- Description -->
+    <p class="grey-text text-darken-2" style="margin-bottom: 2rem; font-size: 1.1rem;">
+      This chart shows how food insecurity has affected different demographic groups over the years. Select a group to compare trends.
+    </p>
+
     <!-- Navigation Buttons -->
-    <div style="margin: 2rem 0;">
-      <a href="/" class="btn blue"><i class="material-icons left">home</i>Back to Home</a>
+    <div class="row center-align" style="margin-top: 2rem; margin-bottom: 4rem;">
+      <a href="/dashboard" class="btn blue">
+        <i class="material-icons left">home</i>Back to Dashboard
+      </a>
       <a id="resetButton" class="btn orange darken-1" style="margin-left: 1rem;">
         <i class="material-icons left">refresh</i>Reset
       </a>
@@ -75,7 +80,8 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      M.FormSelect.init(document.querySelectorAll('select'));
+      const elems = document.querySelectorAll('select');
+      M.FormSelect.init(elems);
     });
   </script>
 </body>

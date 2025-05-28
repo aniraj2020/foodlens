@@ -1,14 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
   const socket = io();
 
-  // Emit welcome toast if present (sent via EJS inline data)
-  const welcomeMessage = document.body.getAttribute("data-welcome");
-  if (welcomeMessage) {
-    socket.emit("toast", welcomeMessage);
-  }
+  // console.log("Socket.IO client initialized"); // Debug line
 
   // Listen for toast event and display it
   socket.on("toast", (msg) => {
+    // console.log("Toast received:", msg); // Debug line
     M.toast({
       html: msg,
       displayLength: 3000,
@@ -16,6 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // // Emit pageVisited for analytics (server handles deduplication & skips admin)
+  // Optional: Emit pageVisited for analytics (you can uncomment this)
   // socket.emit("pageVisited", { page: window.location.pathname });
 });

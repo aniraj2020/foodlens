@@ -1,62 +1,54 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Register - FoodLens</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
-  <style>
-    body {
-      padding-top: 5rem;
-    }
-  </style>
-</head>
-<body class="container">
-  <h4>Register</h4>
+<h4 class="center-align">Create a FoodLens Account</h4>
+<p class="center-align">Register below to start exploring food insecurity insights.</p>
 
-  <% if (typeof error !== 'undefined' && error) { %>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        M.toast({
-          html: "<%= error %>",
-          classes: "rounded red lighten-1 white-text",
-          displayLength: 3000
-        });
-      });
-    </script>
-  <% } %>
+<div class="row">
+  <div class="col s12 m6 offset-m3">
+    <form id="registerForm" action="/register" method="POST">
+      
+      <!-- Username Field -->
+      <div class="input-field">
+        <input type="text" name="username" id="username" required />
+        <label for="username">Username</label>
+      </div>
 
-  <form id="registerForm" action="/register" method="POST">
-    <div class="input-field">
-      <input type="text" name="username" id="username" required />
-      <label for="username">Username</label>
-    </div>
-    <div class="input-field">
-      <input type="password" name="password" id="password" required minlength="4" />
-      <label for="password">Password (min 4 characters)</label>
-    </div>
-    <button type="submit" class="btn">Register</button>
-  </form>
+      <!-- Password Field -->
+      <div class="input-field">
+        <input
+          type="password"
+          name="password"
+          id="password"
+          required
+          pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+          title="Minimum 8 characters with at least 1 letter, 1 number, and 1 special character"
+        />
+        <label for="password">
+          Password 
+          <span style="font-size: 0.8em; color: gray;">
+            (min 8 chars, 1 letter, 1 number, 1 symbol)
+          </span>
+        </label>
+        <span onclick="togglePassword()" style="cursor:pointer;color:teal;font-size: 0.9em;">Show/Hide Password</span>
+      </div>
 
-  <p>Already have an account? <a href="/login">Login</a></p>
+      <!-- Submit Button -->
+      <button type="submit" class="btn waves-effect waves-light full-width">Register</button>
 
-  <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      M.updateTextFields(); // Materialize label alignment
+      <!-- Login Link -->
+      <p class="center-align" style="margin-top: 20px;">
+        Already have an account? <a href="/login">Login</a>
+      </p>
+    </form>
+  </div>
+</div>
 
-      document.getElementById("registerForm").addEventListener("submit", function (e) {
-        const username = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value.trim();
+<!-- Script Section -->
+<script>
+  function togglePassword() {
+    const input = document.getElementById("password");
+    input.type = input.type === "password" ? "text" : "password";
+  }
 
-        if (!username || !password) {
-          e.preventDefault();
-          M.toast({
-            html: "All fields are required.",
-            classes: "rounded red lighten-1 white-text"
-          });
-        }
-      });
-    });
-  </script>
-</body>
-</html>
+  document.addEventListener("DOMContentLoaded", function () {
+    M.updateTextFields();
+  });
+</script>
