@@ -3,7 +3,10 @@ const path = require("path");
 const mongoose = require("mongoose");
 const csv = require("csv-parser");
 const dotenv = require("dotenv");
+const bcrypt = require("bcryptjs");
+
 const FoodSecurity = require("../models/FoodSecurity");
+const User = require("../models/User");
 
 dotenv.config();
 
@@ -22,11 +25,28 @@ const connectDB = async () => {
 function categorizeGroup(group) {
   const genderValues = ["Male", "Female"];
   const agePattern = /^\d{2}-\d{2} years$|^\d{2}\+ years$/;
-
   if (genderValues.includes(group)) return { gender: group };
   if (agePattern.test(group)) return { age_group: group };
   return { suburb_group: group };
 }
+
+// Create or replace admin user using .save() to trigger password hashing
+const createAdminUser = async () => {
+  try {
+    await User.deleteOne({ username: "adminuser" });
+
+    const newUser = new User({
+      username: "adminuser",
+      password: "adminpassword123",
+      role: "admin"
+    });
+
+    await newUser.save();
+    console.log("Admin user created:", newUser.username);
+  } catch (error) {
+    console.error("Error creating admin user:", error.message);
+  }
+};
 
 const seedData = async () => {
   await connectDB();
@@ -38,10 +58,16 @@ const seedData = async () => {
     .pipe(csv())
     .on("data", (data) => {
       const year = parseInt(data.year);
-      const count = parseInt(data.sample_size);
-      const group = data.respondent_group;
+      const sampleSize = parseInt(data.sample_size);
+      const resultPercent = parseFloat(data.result);
+      let group = data.respondent_group?.trim() || "";
 
-      if (!isNaN(year) && !isNaN(count) && data.insecurity_type && group) {
+      group = group.replace(/\s+/g, " ");
+      group = group.replace(/(\d{2})\s*\+\s*years/, "$1+ years");
+
+      const type = data.insecurity_type?.trim();
+      if (!isNaN(year) && !isNaN(sampleSize) && !isNaN(resultPercent) && type && group) {
+        const affected = Math.round((sampleSize * resultPercent) / 100);
         const categoryObj = categorizeGroup(group);
 
         const doc = {
@@ -50,8 +76,6 @@ const seedData = async () => {
           count,
           demographic_group: group
         };
-        
-        // Only add the detected category key (avoid storing null)
         if (categoryObj.gender) doc.gender = categoryObj.gender;
         if (categoryObj.age_group) doc.age_group = categoryObj.age_group;
         if (categoryObj.suburb_group) doc.suburb_group = categoryObj.suburb_group;
@@ -60,16 +84,17 @@ const seedData = async () => {
       }
     })
     .on("end", async () => {
-      console.log("Parsed records:", results.length);
-      console.log("Example record:", results[0]); // 
-
       try {
         await FoodSecurity.deleteMany({});
         await FoodSecurity.insertMany(results);
-        console.log("Seeded successfully!");
-        mongoose.connection.close();
+        console.log("FoodSecurity data seeded:", results.length);
+
+        await createAdminUser();
       } catch (err) {
         console.error("Seeding error:", err.message);
+      } finally {
+        await mongoose.connection.close();
+        console.log("MongoDB connection closed.");
       }
     });
 };

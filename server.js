@@ -58,6 +58,7 @@ app.use("/", authRoutes);
 
 // Admin-specific routes
 app.use("/", adminRoutes);
+app.use('/api/student', studentRoute);
 
 // View Routes (protected)
 app.get("/", ensureAuthenticated, (req, res) => {
