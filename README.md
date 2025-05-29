@@ -131,11 +131,9 @@ foodlens-app/
 
 ## Admin Access
 
-- Super Admin: Created from backend
+- Super Admin: Created when you run the seedData.js file inside seed folder.
 - Username: adminuser
 - Password: adminpassword123
-
-```
 
 ---
 ###  Backend Architecture Diagram

@@ -3,7 +3,9 @@ const path = require("path");
 const mongoose = require("mongoose");
 const csv = require("csv-parser");
 const dotenv = require("dotenv");
+
 const FoodSecurity = require("../models/FoodSecurity");
+const User = require("../models/User");
 
 dotenv.config();
 
@@ -28,6 +30,28 @@ function categorizeGroup(group) {
   return { suburb_group: group };
 }
 
+// check and Create
+const createAdminUser = async () => {
+  try {
+    const existing = await User.findOne({ username: "adminuser" });
+    if (existing) {
+      console.log("Admin user already exists:", existing.username);
+      return;
+    }
+
+    const newUser = new User({
+      username: "adminuser",
+      password: "adminpassword123",
+      role: "admin"
+    });
+
+    await newUser.save();
+    console.log("Admin user created:", newUser.username);
+  } catch (error) {
+    console.error("Error creating admin user:", error.message);
+  }
+};
+
 const seedData = async () => {
   await connectDB();
 
@@ -42,13 +66,11 @@ const seedData = async () => {
       const resultPercent = parseFloat(data.result);
       
       let group = data.respondent_group?.trim();
-      // Fix common encoding or accidental whitespace issues
-      group = group.replace(/\s+/g, " "); // Collapse multiple spaces
-      group = group.replace(/(\d{2})\s*\+\s*years/, "$1+ years"); // Normalize "65 + years" → "65+ years"
+      group = group.replace(/\s+/g, " ");
+      group = group.replace(/(\d{2})\s*\+\s*years/, "$1+ years");
 
       const type = data.insecurity_type?.trim();
 
-      // Calculate affected count
       if (!isNaN(year) && !isNaN(sampleSize) && !isNaN(resultPercent) && type && group) {
         const affected = Math.round((sampleSize * resultPercent) / 100);
 
@@ -62,7 +84,6 @@ const seedData = async () => {
           demographic_group: group,
         };
 
-        // Add demographic key (gender, age_group, suburb_group)
         if (categoryObj.gender) doc.gender = categoryObj.gender;
         if (categoryObj.age_group) doc.age_group = categoryObj.age_group;
         if (categoryObj.suburb_group) doc.suburb_group = categoryObj.suburb_group;
@@ -78,9 +99,12 @@ const seedData = async () => {
         await FoodSecurity.deleteMany({});
         await FoodSecurity.insertMany(results);
         console.log("Seeding completed successfully!");
-        mongoose.connection.close();
+
+        await createAdminUser();
       } catch (err) {
         console.error("Seeding error:", err.message);
+      } finally {
+        mongoose.connection.close();
       }
     });
 };
